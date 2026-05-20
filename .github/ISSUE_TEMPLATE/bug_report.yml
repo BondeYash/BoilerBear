@@ -1,0 +1,65 @@
+name: Bug report
+description: Something is broken in BoilerBear
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill out the form below.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One-paragraph description of the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal sequence of actions that triggers the issue. Include the share URL or `Plan` JSON if relevant.
+      placeholder: |
+        1. Go to /builder
+        2. Select Vite + TS + Tailwind + MUI
+        3. Click "Copy command"
+        4. Paste and run in a clean directory
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: BoilerBear version or commit SHA
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Node version, pnpm version
+      placeholder: macOS 14.4, Node 22.11, pnpm 9.12
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Paste relevant logs or attach screenshots.

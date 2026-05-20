@@ -1,0 +1,38 @@
+{
+  "name": "@boilerbear/modules",
+  "version": "0.0.0",
+  "description": "Module manifests for the BoilerBear registry.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate-manifests": "tsx scripts/validate.ts",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@boilerbear/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@boilerbear/config": "workspace:*",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "globalDependencies": ["**/.env.*local", "tsconfig.json", "biome.json"],
+  "globalEnv": ["NODE_ENV"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**", "tests/**", "vitest.config.ts"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "validate-manifests": {
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

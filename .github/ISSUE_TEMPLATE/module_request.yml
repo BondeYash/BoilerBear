@@ -1,0 +1,56 @@
+name: Module request
+description: Request a new module or recipe in the registry
+labels: ["module", "triage"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Module name
+      placeholder: e.g. chakra-ui
+    validations:
+      required: true
+
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage / npm
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - framework
+        - language
+        - styling
+        - components
+        - state
+        - data
+        - auth
+        - routing
+        - testing
+        - lint
+        - ci
+        - deploy
+        - analytics
+        - i18n
+        - misc
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why include it?
+      description: Popularity, unique use case, ecosystem fit. Links to download stats help.
+    validations:
+      required: true
+
+  - type: textarea
+    id: compat
+    attributes:
+      label: Known conflicts / requirements
+      description: Other modules that must (not) be present.

@@ -1,0 +1,59 @@
+{
+  "name": "@boilerbear/core",
+  "version": "0.0.0",
+  "description": "Pure domain logic for BoilerBear: schemas, registry, resolver, emitter, plan codec.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "import": "./dist/schema/index.js",
+      "require": "./dist/schema/index.cjs"
+    },
+    "./resolver": {
+      "types": "./dist/resolver/index.d.ts",
+      "import": "./dist/resolver/index.js",
+      "require": "./dist/resolver/index.cjs"
+    },
+    "./emitter": {
+      "types": "./dist/emitter/index.d.ts",
+      "import": "./dist/emitter/index.js",
+      "require": "./dist/emitter/index.cjs"
+    },
+    "./codec": {
+      "types": "./dist/codec/index.d.ts",
+      "import": "./dist/codec/index.js",
+      "require": "./dist/codec/index.cjs"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "lz-string": "^1.5.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@boilerbear/config": "workspace:*",
+    "@fast-check/vitest": "^0.1.3",
+    "@vitest/coverage-v8": "^2.1.8",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@boilerbear/ui",
+  "version": "0.0.0",
+  "description": "Shared shadcn-based component library for BoilerBear apps.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./styles.css": "./src/styles.css",
+    "./lib/cn": "./src/lib/cn.ts",
+    "./components/*": "./src/components/*.tsx"
+  },
+  "files": ["src"],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo"
+  },
+  "dependencies": {
+    "@radix-ui/react-checkbox": "^1.1.2",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.1",
+    "@radix-ui/react-tabs": "^1.1.1",
+    "@radix-ui/react-tooltip": "^1.1.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.460.0",
+    "tailwind-merge": "^2.5.4"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@boilerbear/config": "workspace:*",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.2"
+  }
+}

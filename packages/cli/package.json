@@ -1,0 +1,36 @@
+{
+  "name": "@boilerbear/cli",
+  "version": "0.0.0",
+  "description": "Run BoilerBear plans from a share hash, recipe id, or local JSON file.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "boilerbear": "./dist/cli.js"
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "node dist/cli.js",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@boilerbear/core": "workspace:*",
+    "@boilerbear/modules": "workspace:*",
+    "cac": "^6.7.14",
+    "execa": "^9.5.1",
+    "picocolors": "^1.1.1",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@boilerbear/config": "workspace:*",
+    "@types/node": "^22.10.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

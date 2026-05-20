@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`emitCommand > snapshot — Next + Zustand (bun) 1`] = `
+"set -euo pipefail
+bun create next-app@latest my-app --ts --tailwind --eslint --app
+cd 'my-app'
+bun add zustand@^5.0.0"
+`;
+
+exports[`emitCommand > snapshot — Vite + Tailwind + shadcn (pnpm) 1`] = `
+"set -euo pipefail
+pnpm create vite@latest my-app -- --template react-ts
+cd 'my-app'
+pnpm add -D autoprefixer@^10.4.0 postcss@^8.4.0 tailwindcss@^3.4.0
+mkdir -p '.'
+cat > 'postcss.config.cjs' <<'BB_EOF'
+module.exports = { plugins: { tailwindcss: {}, autoprefixer: {} } };
+BB_EOF"
+`;

@@ -1,0 +1,14 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Approved native install scripts
+allowBuilds:
+  '@biomejs/biome': true
+  esbuild: true
+  sharp: true
+
+onlyBuiltDependencies:
+  - "@biomejs/biome"
+  - "esbuild"
+  - "sharp"
