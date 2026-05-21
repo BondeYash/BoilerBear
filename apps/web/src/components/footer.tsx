@@ -8,7 +8,7 @@ export function Footer(): React.JSX.Element {
         <p className="text-sm text-muted-foreground">
           MIT licensed. Open source on{' '}
           <a
-            href="https://github.com/empiricinfotech/BoilerBear"
+            href="https://github.com/BondeYash/BoilerBear"
             target="_blank"
             rel="noreferrer noopener"
             className="font-medium underline-offset-4 hover:underline"

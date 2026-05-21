@@ -32,7 +32,7 @@ export function Header(): React.JSX.Element {
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" size="icon" asChild aria-label="GitHub repository">
             <a
-              href="https://github.com/empiricinfotech/BoilerBear"
+              href="https://github.com/BondeYash/BoilerBear"
               target="_blank"
               rel="noreferrer noopener"
             >

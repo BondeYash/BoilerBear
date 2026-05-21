@@ -48,4 +48,4 @@ We deliberately won't ship:
 
 ## Want to influence it?
 
-Open an [issue](https://github.com/empiricinfotech/BoilerBear/issues) or comment on the milestone tracker in [PHASE1_IMPLEMENTATION.md](https://github.com/empiricinfotech/BoilerBear/blob/main/docs/PHASE1_IMPLEMENTATION.md).
+Open an [issue](https://github.com/BondeYash/BoilerBear/issues) or comment on the milestone tracker in [PHASE1_IMPLEMENTATION.md](https://github.com/BondeYash/BoilerBear/blob/main/docs/PHASE1_IMPLEMENTATION.md).

@@ -54,6 +54,6 @@ See [CLI reference](/docs/cli) for the full command surface.
 
 ## What's next
 
-- Add more modules — the registry lives at [packages/modules/src/](https://github.com/empiricinfotech/BoilerBear/tree/main/packages/modules/src).
-- Author a recipe (pre-bundled stack) — see [ADDING_A_MODULE.md](https://github.com/empiricinfotech/BoilerBear/blob/main/docs/contributing/ADDING_A_MODULE.md).
-- File a bug or request a module — [open an issue](https://github.com/empiricinfotech/BoilerBear/issues/new).
+- Add more modules — the registry lives at [packages/modules/src/](https://github.com/BondeYash/BoilerBear/tree/main/packages/modules/src).
+- Author a recipe (pre-bundled stack) — see [ADDING_A_MODULE.md](https://github.com/BondeYash/BoilerBear/blob/main/docs/contributing/ADDING_A_MODULE.md).
+- File a bug or request a module — [open an issue](https://github.com/BondeYash/BoilerBear/issues/new).

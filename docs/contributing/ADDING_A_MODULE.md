@@ -9,7 +9,7 @@ We'll add a fictional `daisyui` styling module as the running example.
 ## 0. Pre-flight
 
 ```bash
-git clone https://github.com/empiricinfotech/BoilerBear
+git clone https://github.com/BondeYash/BoilerBear
 cd BoilerBear
 nvm use            # Node 22 from .nvmrc
 corepack enable    # pnpm 11

@@ -12,7 +12,7 @@ A shell command is auditable: you can read every step before running it. There's
 
 ## Is the install command safe to run?
 
-The command is generated from public module manifests in [packages/modules/src/](https://github.com/empiricinfotech/BoilerBear/tree/main/packages/modules/src). It runs:
+The command is generated from public module manifests in [packages/modules/src/](https://github.com/BondeYash/BoilerBear/tree/main/packages/modules/src). It runs:
 
 - The framework's official `create` command (e.g. `pnpm create vite@latest`).
 - `pnpm add` / `npm install` / etc. for each module's pinned deps.
@@ -22,7 +22,7 @@ Every manifest goes through a strict checker on every PR (no `..` in paths, no a
 
 ## What's a "manifest"?
 
-A `ModuleManifest` is a TypeScript object describing one module: its id, category, dependencies, conflicts with other modules, package manager-specific install behavior, and config files. See [packages/modules/src/state/zustand.ts](https://github.com/empiricinfotech/BoilerBear/blob/main/packages/modules/src/state/zustand.ts) for a small example, or [docs/contributing/ADDING_A_MODULE.md](https://github.com/empiricinfotech/BoilerBear/blob/main/docs/contributing/ADDING_A_MODULE.md) for a walkthrough.
+A `ModuleManifest` is a TypeScript object describing one module: its id, category, dependencies, conflicts with other modules, package manager-specific install behavior, and config files. See [packages/modules/src/state/zustand.ts](https://github.com/BondeYash/BoilerBear/blob/main/packages/modules/src/state/zustand.ts) for a small example, or [docs/contributing/ADDING_A_MODULE.md](https://github.com/BondeYash/BoilerBear/blob/main/docs/contributing/ADDING_A_MODULE.md) for a walkthrough.
 
 ## What's a "recipe"?
 
@@ -31,18 +31,18 @@ A recipe is a pre-bundled plan — a curated set of modules with a name and desc
 ## How do I add a module?
 
 ```bash
-git clone https://github.com/empiricinfotech/BoilerBear
+git clone https://github.com/BondeYash/BoilerBear
 cd BoilerBear && pnpm install
 pnpm new-module <id>          # interactive scaffold
 pnpm validate-manifests       # static checks
 pnpm test                     # full suite
 ```
 
-Then open a PR. The [ADDING_A_MODULE.md](https://github.com/empiricinfotech/BoilerBear/blob/main/docs/contributing/ADDING_A_MODULE.md) walkthrough explains each field.
+Then open a PR. The [ADDING_A_MODULE.md](https://github.com/BondeYash/BoilerBear/blob/main/docs/contributing/ADDING_A_MODULE.md) walkthrough explains each field.
 
 ## How do you resolve conflicts?
 
-The resolver walks `requires`, `conflicts`, and `recommends` edges. Conflicts have a severity (`error` blocks the build, `warning` shows a banner but lets you continue, `info` is a hint). Missing requirements default to `error`. The exact rules live in [packages/core/src/resolver/](https://github.com/empiricinfotech/BoilerBear/tree/main/packages/core/src/resolver).
+The resolver walks `requires`, `conflicts`, and `recommends` edges. Conflicts have a severity (`error` blocks the build, `warning` shows a banner but lets you continue, `info` is a hint). Missing requirements default to `error`. The exact rules live in [packages/core/src/resolver/](https://github.com/BondeYash/BoilerBear/tree/main/packages/core/src/resolver).
 
 ## What about Yarn 1 / Yarn Berry?
 

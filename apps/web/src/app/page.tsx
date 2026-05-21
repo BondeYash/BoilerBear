@@ -101,7 +101,7 @@ export default function HomePage(): React.JSX.Element {
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <a
-                  href="https://github.com/empiricinfotech/BoilerBear"
+                  href="https://github.com/BondeYash/BoilerBear"
                   target="_blank"
                   rel="noreferrer noopener"
                 >
