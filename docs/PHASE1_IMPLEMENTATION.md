@@ -26,10 +26,10 @@
 | 6 | Sharing & OG Images | ✅ Done — `/s/[hash]` view + `/og/[hash]` edge route |
 | 7 | Manifest Quality Gates | ✅ Done — strict checker + nightly install matrix |
 | 8 | Testing & Quality | ✅ Done — 90%+ core coverage, Playwright E2E + axe a11y gate |
-| 9 | Docs & Contribution | ⏳ Next |
-| 10 | Beta Launch | ⏳ Pending |
+| 9 | Docs & Contribution | ✅ Done — /docs site, ADRs, ADDING_A_MODULE walkthrough, `pnpm new-module` scaffolder |
+| 10 | Beta Launch | ⏳ Next |
 
-**Pipeline state:** 5 packages (`config`, `core`, `modules`, `cli`, `ui`) + 1 app (`web`). 59 unit tests pass (core 45, modules 3, cli 11). `pnpm typecheck` and `pnpm build` clean across all workspaces. Biome clean across ~137 files. Next.js production build: 5 routes (`/`, `/builder`, `/s/[hash]`, `/og/[hash]`, 404). 7 Playwright E2E specs cover builder happy path, share-restore, conflict UX, share view, and axe-core a11y across landing + all builder steps. `@boilerbear/core` line/statement coverage 98.5% (threshold 90).
+**Pipeline state:** 5 packages (`config`, `core`, `modules`, `cli`, `ui`) + 1 app (`web`). 59 unit tests pass (core 45, modules 3, cli 11). `pnpm typecheck` and `pnpm build` clean across all workspaces. Biome clean across ~144 files. Next.js production build: 7 route trees (`/`, `/builder`, `/s/[hash]`, `/og/[hash]`, `/docs`, `/docs/[slug]` SSG × 5, 404). 8 Playwright E2E specs cover builder happy path, share-restore, conflict UX, share view, and axe-core a11y across landing + docs + all builder steps. `@boilerbear/core` line/statement coverage 98.5% (threshold 90). Three ADRs published (`docs/adr/0001-0003`).
 
 ---
 
@@ -392,27 +392,30 @@
 
 ---
 
-## Milestone 9 — Docs & Contribution (Day 38–40)
+## Milestone 9 — Docs & Contribution (Day 38–40) ✅
 
-### Step 9.1 — User docs
+### Step 9.1 — User docs ✅
 **Tasks**
-- `apps/web/src/app/docs/` — markdown-driven docs via `mdx` and `contentlayer-style` flat-file loader (lightweight; no DB).
-- Pages: Getting Started, How sharing works, CLI reference, Roadmap, FAQ.
+- `apps/web/src/app/docs/` — flat-file markdown loader at `apps/web/src/lib/docs.ts` reads `apps/web/src/content/docs/*.md` with a tiny frontmatter parser. Rendered via `react-markdown` + `remark-gfm`, styled with `@tailwindcss/typography`.
+- Routes: `/docs` (index card grid via `listDocs`) and `/docs/[slug]` (server component, `generateStaticParams` for SSG).
+- Pages: Getting Started, How sharing works, CLI reference, Roadmap, FAQ — all SSG-prerendered at build.
+- a11y: axe-core E2E covers `/docs` + `/docs/getting-started`.
 
-### Step 9.2 — Contribution docs
+### Step 9.2 — Contribution docs ✅
 **Tasks**
-- `CONTRIBUTING.md`: dev setup, repo tour, branch policy, how to run nightly checks locally.
-- `docs/contributing/ADDING_A_MODULE.md`: walk-through of authoring a manifest with a working PR template.
-- `pnpm new-module <id>` script: interactive prompts (category, deps, etc.) writes a scaffolded TS file under `packages/modules/src/<category>/<id>.ts` and runs `pnpm validate-manifests`.
+- `CONTRIBUTING.md` updated with `pnpm new-module` quick-path, "running nightly checks locally" section, and a pointer to ADRs.
+- `docs/contributing/ADDING_A_MODULE.md` — full walkthrough using a fictional daisyui manifest. Covers field reference, setup-step kinds, common pitfalls, and the PR-open flow.
+- `packages/modules/scripts/new-module.ts` — interactive scaffolder. Prompts for category, name, description, homepage, semver range, primary dep, and `appliesTo` frameworks. Writes `packages/modules/src/<category>/<id>.ts` and auto-patches `src/index.ts` (import + `allManifests` array + named `export {}` block). Wired as `pnpm new-module <id>` at root.
 
-### Step 9.3 — ADRs
+### Step 9.3 — ADRs ✅
 **Tasks**
-- `docs/adr/0001-no-backend-phase-1.md`.
-- `docs/adr/0002-manifest-format.md`.
-- `docs/adr/0003-cli-shim-vs-raw-command.md`.
+- `docs/adr/0001-no-backend-phase-1.md` — trade-offs of URL-encoded plans vs a DB-backed store.
+- `docs/adr/0002-manifest-format.md` — why manifests are TypeScript objects + Zod schemas, not JSON or YAML.
+- `docs/adr/0003-cli-shim-vs-raw-command.md` — why both the raw `bash -c '…'` and the `@boilerbear/cli` shim exist, and the boundary between them.
 
 **Acceptance**
-- A contributor following `ADDING_A_MODULE.md` can land a manifest in under 30 minutes from a clean clone.
+- A contributor following `ADDING_A_MODULE.md` can land a manifest in under 30 minutes from a clean clone (scaffold → validate → smoke-test in builder → PR).
+- `/docs` ships in the production build (5 SSG pages, ~165 B route shell).
 
 ---
 

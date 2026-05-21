@@ -25,6 +25,7 @@
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "validate-manifests": "turbo run validate-manifests",
+    "new-module": "pnpm --filter @boilerbear/modules new-module",
     "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "husky"
   },

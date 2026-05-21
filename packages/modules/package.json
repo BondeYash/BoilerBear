@@ -23,6 +23,7 @@
     "test:watch": "vitest",
     "validate-manifests": "tsx scripts/check-manifests.ts",
     "install-recipes": "tsx scripts/install-recipes.ts",
+    "new-module": "tsx scripts/new-module.ts",
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {

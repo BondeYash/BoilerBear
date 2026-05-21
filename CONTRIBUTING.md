@@ -42,7 +42,27 @@ See [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) for the long-form architectur
 
 ## Adding a Module Manifest
 
-This is the most common contribution. A walk-through lives in [`docs/contributing/ADDING_A_MODULE.md`](docs/contributing/ADDING_A_MODULE.md) (filled out in Milestone 9). Until then, copy an existing file in `packages/modules/src/` as a template.
+This is the most common contribution. The full walk-through lives in [`docs/contributing/ADDING_A_MODULE.md`](docs/contributing/ADDING_A_MODULE.md). The fast path:
+
+```bash
+pnpm new-module <id>        # interactive scaffold under packages/modules/src/<category>/<id>.ts
+pnpm validate-manifests     # strict checker — every PR runs this
+pnpm test                   # full vitest suite
+```
+
+Recipes — pre-bundled stacks — live in `packages/modules/src/recipes/`. The nightly install matrix (`.github/workflows/nightly.yml`) runs every recipe end-to-end against `pnpm` and `npm` on Ubuntu, so a broken manifest is caught fast.
+
+## Running the Nightly Checks Locally
+
+```bash
+pnpm --filter @boilerbear/modules install-recipes -- --matrix=pnpm
+```
+
+Runs the same matrix CI runs nightly, in your current shell. Each recipe scaffolds into a temp dir, installs, and runs the framework's typecheck. Output is `manifest-health.json`.
+
+## Architecture Decision Records
+
+Significant decisions (no backend in Phase 1, manifest schema choices, CLI shim vs raw command, etc.) are captured in [`docs/adr/`](docs/adr/). Add a new ADR whenever you're locking in a design that future contributors should know about.
 
 ## Commit Style
 

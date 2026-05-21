@@ -32,6 +32,7 @@
     "@boilerbear/config": "workspace:*",
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.0",
+    "@tailwindcss/typography": "^0.5.15",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.20",
