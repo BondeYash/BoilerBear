@@ -1,9 +1,24 @@
 import type { Metadata, Viewport } from 'next';
+import { Bricolage_Grotesque, DM_Mono } from 'next/font/google';
 import type * as React from 'react';
 import { Footer } from '../components/footer';
 import { Header } from '../components/header';
 import { ThemeProvider } from '../components/theme-provider';
 import '../styles/globals.css';
+
+const fontSans = Bricolage_Grotesque({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+  axes: ['opsz', 'wdth'],
+});
+
+const fontMono = DM_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+  weight: ['300', '400', '500'],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -32,7 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }): React.JSX.Element {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fontSans.variable} ${fontMono.variable}`}
+    >
       <body className="min-h-screen flex flex-col bg-background font-sans antialiased">
         <ThemeProvider
           attribute="class"
