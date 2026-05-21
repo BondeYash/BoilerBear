@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="BoilerBear">
+  <title>BoilerBear</title>
+
+  <!-- Mark (scaled + translated to 144x144 at left) -->
+  <g transform="translate(20, 20) scale(0.625)">
+    <circle cx="72" cy="44" r="30" fill="#2A1F1A" />
+    <circle cx="184" cy="44" r="30" fill="#2A1F1A" />
+    <circle cx="72" cy="44" r="12" fill="#F5A524" />
+    <circle cx="184" cy="44" r="12" fill="#F5A524" />
+    <rect x="32" y="40" width="192" height="184" rx="44" ry="44" fill="#2A1F1A" />
+    <circle cx="98" cy="118" r="9" fill="#FAF6EE" />
+    <circle cx="158" cy="118" r="9" fill="#FAF6EE" />
+    <path d="M104 162 L124 176 L104 190" fill="none" stroke="#F5A524" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="138" y="170" width="22" height="14" rx="4" fill="#5EE2C5" />
+  </g>
+
+  <!-- Wordmark -->
+  <text
+    x="200"
+    y="118"
+    font-family="'Geist Sans', 'Inter Tight', Inter, system-ui, -apple-system, sans-serif"
+    font-size="84"
+    font-weight="700"
+    letter-spacing="-3"
+    fill="#0F1115"
+  >boilerbear</text>
+
+  <!-- Tagline -->
+  <text
+    x="202"
+    y="156"
+    font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
+    font-size="18"
+    font-weight="500"
+    letter-spacing="0"
+    fill="#3A2A22"
+  >pick your stack. get one command.</text>
+</svg>

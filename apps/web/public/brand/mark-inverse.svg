@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="BoilerBear mark (dark surface)">
+  <title>BoilerBear</title>
+  <desc>Inverse variant of the BoilerBear mark for dark backgrounds: cream face, cocoa ears, honey accent, mint cursor.</desc>
+
+  <!-- Outer ears (cream) -->
+  <circle cx="72" cy="44" r="30" fill="#FAF6EE" />
+  <circle cx="184" cy="44" r="30" fill="#FAF6EE" />
+
+  <!-- Inner ears (honey) -->
+  <circle cx="72" cy="44" r="12" fill="#F5A524" />
+  <circle cx="184" cy="44" r="12" fill="#F5A524" />
+
+  <!-- Face (cream) -->
+  <rect x="32" y="40" width="192" height="184" rx="44" ry="44" fill="#FAF6EE" />
+
+  <!-- Eyes (cocoa) -->
+  <circle cx="98" cy="118" r="9" fill="#2A1F1A" />
+  <circle cx="158" cy="118" r="9" fill="#2A1F1A" />
+
+  <!-- Prompt chevron (cocoa for contrast on cream) -->
+  <path
+    d="M104 162 L124 176 L104 190"
+    fill="none"
+    stroke="#2A1F1A"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Cursor block (mint) -->
+  <rect x="138" y="170" width="22" height="14" rx="4" fill="#5EE2C5" />
+</svg>

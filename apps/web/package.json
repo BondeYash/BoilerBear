@@ -9,7 +9,10 @@
     "start": "next start --port 3000",
     "typecheck": "tsc --noEmit",
     "lint": "biome check src",
-    "clean": "rm -rf .next .turbo"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:install": "playwright install --with-deps chromium",
+    "clean": "rm -rf .next .turbo test-results playwright-report"
   },
   "dependencies": {
     "@boilerbear/core": "workspace:*",
@@ -20,14 +23,19 @@
     "next-themes": "^0.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
     "@boilerbear/config": "workspace:*",
+    "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.20",
+    "axe-core": "^4.10.2",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",

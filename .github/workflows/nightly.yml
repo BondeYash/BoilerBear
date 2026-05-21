@@ -1,0 +1,72 @@
+name: Nightly Recipe Install
+
+on:
+  schedule:
+    # 04:15 UTC every day. Avoids the on-the-hour cron rush.
+    - cron: '15 4 * * *'
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'Comma-separated recipe ids to run (default: all)'
+        required: false
+        default: ''
+      matrix:
+        description: 'Package managers to test, comma-separated'
+        required: false
+        default: 'pnpm,npm'
+
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-recipes:
+    name: Install recipe (${{ matrix.pm }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        pm: [pnpm, npm]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install workspace deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Build core (needed by modules)
+        run: pnpm --filter @boilerbear/core build
+
+      - name: Validate manifests
+        run: pnpm --filter @boilerbear/modules validate-manifests
+
+      - name: Run install-recipes
+        env:
+          FILTER: ${{ github.event.inputs.filter }}
+          OUTPUT: ${{ github.workspace }}/manifest-health.${{ matrix.pm }}.json
+        run: |
+          ARGS="--matrix=${{ matrix.pm }} --output=$OUTPUT"
+          if [ -n "${FILTER}" ]; then
+            ARGS="$ARGS --filter=${FILTER}"
+          fi
+          pnpm --filter @boilerbear/modules install-recipes -- $ARGS
+
+      - name: Upload manifest-health artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-health-${{ matrix.pm }}
+          path: ${{ github.workspace }}/manifest-health.${{ matrix.pm }}.json
+          if-no-files-found: warn
+          retention-days: 14

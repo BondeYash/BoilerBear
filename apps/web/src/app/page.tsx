@@ -1,3 +1,4 @@
+import { Logo } from '@/components/logo';
 import { allManifests, allRecipes } from '@boilerbear/modules';
 import { Badge } from '@boilerbear/ui/components/badge';
 import { Button } from '@boilerbear/ui/components/button';
@@ -40,6 +41,9 @@ export default function HomePage(): React.JSX.Element {
   return (
     <div className="container py-16 md:py-24">
       <section className="mx-auto max-w-3xl text-center">
+        <div className="mb-6 flex justify-center">
+          <Logo size={88} />
+        </div>
         <Badge variant="secondary" className="mb-4">
           Pre-alpha · {moduleCount} modules · {recipeCount} recipes
         </Badge>

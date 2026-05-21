@@ -1,3 +1,4 @@
+import { fc, test as fcTest } from '@fast-check/vitest';
 import { describe, expect, it } from 'vitest';
 import {
   CycleError,
@@ -94,4 +95,39 @@ describe('recommendAdditions', () => {
     const suggestions = recommendAdditions(planFor(['tailwindcss', 'shadcn-ui']), baseRegistry);
     expect(suggestions.find((s) => s.id === 'shadcn-ui')).toBeUndefined();
   });
+});
+
+describe('resolver determinism (property)', () => {
+  const knownIds = allFixtures.filter((m) => m.category !== 'framework').map((m) => m.id);
+  const moduleSubset = fc
+    .subarray(knownIds, { minLength: 0, maxLength: knownIds.length })
+    .map((arr) => [...arr]);
+
+  fcTest.prop([moduleSubset])('sortModules is stable across permutations', (modules) => {
+    const a = sortModules(planFor(modules), baseRegistry).map((m) => m.id);
+    const reversed = [...modules].reverse();
+    const b = sortModules(planFor(reversed), baseRegistry).map((m) => m.id);
+    expect(b).toEqual(a);
+  });
+
+  fcTest.prop([moduleSubset])('detectConflicts is deterministic across permutations', (modules) => {
+    const a = detectConflicts(planFor(modules), baseRegistry);
+    const b = detectConflicts(planFor([...modules].reverse()), baseRegistry);
+    const norm = (w: typeof a.warnings) =>
+      [...w].map((x) => `${x.code}:${x.moduleId ?? ''}:${x.relatedId ?? ''}:${x.severity}`).sort();
+    expect(norm(b.warnings)).toEqual(norm(a.warnings));
+    expect(b.hasErrors).toBe(a.hasErrors);
+  });
+
+  fcTest.prop([moduleSubset])(
+    'recommendAdditions never suggests a module already in the plan',
+    (modules) => {
+      const plan = planFor(modules);
+      const picked = new Set([plan.base, ...plan.modules]);
+      const suggestions = recommendAdditions(plan, baseRegistry);
+      for (const s of suggestions) {
+        expect(picked.has(s.id)).toBe(false);
+      }
+    },
+  );
 });

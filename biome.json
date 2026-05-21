@@ -16,6 +16,8 @@
       "**/coverage",
       "**/node_modules",
       "**/.contentlayer",
+      "**/playwright-report",
+      "**/test-results",
       "**/*.snap"
     ]
   },

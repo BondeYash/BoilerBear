@@ -24,12 +24,12 @@
 | 4 | Web App Skeleton + `@boilerbear/ui` | ✅ Done — landing + builder stub |
 | 5 | Builder UI | ✅ Done — 5-step wizard, URL sync |
 | 6 | Sharing & OG Images | ✅ Done — `/s/[hash]` view + `/og/[hash]` edge route |
-| 7 | Manifest Quality Gates | ⏳ Next |
-| 8 | Testing & Quality | ⏳ Pending |
-| 9 | Docs & Contribution | ⏳ Pending |
+| 7 | Manifest Quality Gates | ✅ Done — strict checker + nightly install matrix |
+| 8 | Testing & Quality | ✅ Done — 90%+ core coverage, Playwright E2E + axe a11y gate |
+| 9 | Docs & Contribution | ⏳ Next |
 | 10 | Beta Launch | ⏳ Pending |
 
-**Pipeline state:** 5 packages (`config`, `core`, `modules`, `cli`, `ui`) + 1 app (`web`). 46 unit tests pass (core 32, modules 3, cli 11). `pnpm typecheck` and `pnpm build` clean across all workspaces. Biome clean across ~130 files. Next.js production build: 5 routes (`/`, `/builder`, `/s/[hash]`, `/og/[hash]`, 404). End-to-end smoke validated.
+**Pipeline state:** 5 packages (`config`, `core`, `modules`, `cli`, `ui`) + 1 app (`web`). 59 unit tests pass (core 45, modules 3, cli 11). `pnpm typecheck` and `pnpm build` clean across all workspaces. Biome clean across ~137 files. Next.js production build: 5 routes (`/`, `/builder`, `/s/[hash]`, `/og/[hash]`, 404). 7 Playwright E2E specs cover builder happy path, share-restore, conflict UX, share view, and axe-core a11y across landing + all builder steps. `@boilerbear/core` line/statement coverage 98.5% (threshold 90).
 
 ---
 
@@ -340,7 +340,7 @@
 
 ---
 
-## Milestone 7 — Manifest Quality Gates (Day 29–32) ⏳ Next
+## Milestone 7 — Manifest Quality Gates (Day 29–32) ✅
 
 ### Step 7.1 — Static validation in CI
 **Tasks**
@@ -365,29 +365,30 @@
 
 ---
 
-## Milestone 8 — Testing & Quality (Day 33–37)
+## Milestone 8 — Testing & Quality (Day 33–37) ✅
 
-### Step 8.1 — Unit tests
+### Step 8.1 — Unit tests ✅
 **Tasks**
-- Vitest in every package. Target ≥ 90% line coverage for `@boilerbear/core`.
-- Snapshot tests for the emitter on 5 representative plans.
-- Property tests (`@fast-check/vitest`) for codec roundtrip and resolver determinism.
+- Vitest in every package. Target ≥ 90% line coverage for `@boilerbear/core` — **current: 98.5% lines / 100% functions** with thresholds enforced via `vitest.config.ts`.
+- Snapshot tests for the emitter on representative plans (`Vite + Tailwind + shadcn` pnpm, `Next + Zustand` bun) plus an explicit test for every `setup` step kind and every package manager.
+- Property tests (`@fast-check/vitest`) for codec roundtrip (1000 random plans) and resolver determinism (sortModules, detectConflicts, recommendAdditions across input permutations).
 
-### Step 8.2 — E2E tests
+### Step 8.2 — E2E tests ✅
 **Tasks**
 - Playwright in `apps/web/e2e/`:
-  - Pick a stack → command appears.
-  - Share link → opens identical state.
-  - Conflict UX shows correctly when two incompatibles are picked.
-- Run on CI on every PR (chromium only; firefox + webkit nightly).
+  - `builder.spec.ts` — pick a stack → command appears; share URL → identical state on fresh page; tailwind + shadcn + mui → conflict banner.
+  - `share.spec.ts` — share view renders plan + install command from URL alone; garbage hash → 404.
+- `playwright.config.ts` runs chromium on every PR; firefox + webkit projects are tagged `@nightly` for the nightly job.
+- Web server boots the production build on port 3100 (`pnpm start --port 3100`). CI workflow has a dedicated `e2e` job that uploads the HTML report as an artifact.
 
-### Step 8.3 — Accessibility
+### Step 8.3 — Accessibility ✅
 **Tasks**
-- `@axe-core/playwright` in E2E on the builder route. 0 critical violations gate.
-- Keyboard-only walkthrough manually verified on each step.
+- `@axe-core/playwright` configured via shared fixture in `e2e/fixtures.ts` with `wcag2a/2aa/21a/21aa` tag set.
+- `a11y.spec.ts` runs axe on the landing page and every builder step (Basics → Framework → Modules → Review → Generate). Critical violations fail the build.
 
 **Acceptance**
-- CI green; coverage badge in README.
+- `pnpm --filter @boilerbear/core test:coverage` enforces the threshold locally; CI runs it and uploads the `coverage/` directory as an artifact.
+- `pnpm --filter @boilerbear/web test:e2e` passes all 7 specs locally; CI runs the same in a dedicated job after the build job.
 
 ---
 

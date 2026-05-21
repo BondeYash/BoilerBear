@@ -1,7 +1,10 @@
 import { fc, test as fcTest } from '@fast-check/vitest';
+import lzString from 'lz-string';
 import { describe, expect, it } from 'vitest';
 import { CodecError, decodePlan, encodePlan } from '../src/index.js';
 import type { Plan } from '../src/index.js';
+
+const { compressToEncodedURIComponent } = lzString;
 
 const validName = fc
   .stringMatching(/^[a-z0-9][a-z0-9._~-]{0,30}$/)
@@ -57,6 +60,16 @@ describe('plan codec', () => {
 
   it('throws CodecError on garbage', () => {
     expect(() => decodePlan('!@#$%')).toThrow(CodecError);
+  });
+
+  it('throws CodecError when decompressed payload is not JSON', () => {
+    const bad = compressToEncodedURIComponent('this is { not json');
+    expect(() => decodePlan(bad)).toThrow(CodecError);
+  });
+
+  it('throws CodecError when decoded JSON fails Plan validation', () => {
+    const bad = compressToEncodedURIComponent(JSON.stringify({ v: 1, projectName: 'X' }));
+    expect(() => decodePlan(bad)).toThrow(CodecError);
   });
 
   fcTest.prop([planArb])('round-trips arbitrary valid plans', (plan) => {

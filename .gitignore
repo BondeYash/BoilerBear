@@ -38,6 +38,8 @@ Thumbs.db
 playwright-report/
 test-results/
 .playwright/
+manifest-health.json
+manifest-health.*.json
 
 # Misc
 .cache/
