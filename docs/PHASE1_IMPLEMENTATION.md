@@ -2,7 +2,7 @@
 
 > **Goal of Phase 1:** A public web app where a developer picks a stack and gets a single shell command to scaffold the project. **Zero backend.** All state encoded in the URL.
 
-**Stack for the app itself:** Next.js 15 (App Router, static-exportable), TypeScript strict, Tailwind v4, shadcn/ui, Zustand, react-hook-form + Zod, Vitest, Playwright, Biome, pnpm + Turborepo.
+**Stack for the app itself:** Next.js 15 (App Router, static-exportable), TypeScript strict, Tailwind v3.4, shadcn/ui (source-only `@boilerbear/ui`), Zustand, Vitest, Playwright (E2E target), Biome, pnpm + Turborepo.
 
 **Deliverables at end of Phase 1:**
 1. `boilerbear.dev` builder UI live on Vercel free tier.
@@ -13,7 +13,27 @@
 
 ---
 
-## Milestone 0 — Repo & Tooling Foundation (Day 1–2)
+## Current Status (as of 2026-05-21)
+
+| Milestone | Title | State |
+|-----------|-------|-------|
+| 0 | Repo & Tooling Foundation | ✅ Done |
+| 1 | Core Domain (`@boilerbear/core`) | ✅ Done |
+| 2 | First Manifests (`@boilerbear/modules`) | ✅ Done — 25 manifests + 2 recipes |
+| 3 | CLI Shim (`@boilerbear/cli`) | ✅ Done — `run` + `recipes` commands |
+| 4 | Web App Skeleton + `@boilerbear/ui` | ✅ Done — landing + builder stub |
+| 5 | Builder UI | ✅ Done — 5-step wizard, URL sync |
+| 6 | Sharing & OG Images | ✅ Done — `/s/[hash]` view + `/og/[hash]` edge route |
+| 7 | Manifest Quality Gates | ⏳ Next |
+| 8 | Testing & Quality | ⏳ Pending |
+| 9 | Docs & Contribution | ⏳ Pending |
+| 10 | Beta Launch | ⏳ Pending |
+
+**Pipeline state:** 5 packages (`config`, `core`, `modules`, `cli`, `ui`) + 1 app (`web`). 46 unit tests pass (core 32, modules 3, cli 11). `pnpm typecheck` and `pnpm build` clean across all workspaces. Biome clean across ~130 files. Next.js production build: 5 routes (`/`, `/builder`, `/s/[hash]`, `/og/[hash]`, 404). End-to-end smoke validated.
+
+---
+
+## Milestone 0 — Repo & Tooling Foundation (Day 1–2) ✅
 
 ### Step 0.1 — Initialize monorepo
 **Tasks**
@@ -58,7 +78,7 @@
 
 ---
 
-## Milestone 1 — Core Domain (Day 3–6)
+## Milestone 1 — Core Domain (Day 3–6) ✅
 
 ### Step 1.1 — Schemas in `@boilerbear/core`
 **Tasks**
@@ -148,7 +168,7 @@
 
 ---
 
-## Milestone 2 — First Manifests in `@boilerbear/modules` (Day 7–10)
+## Milestone 2 — First Manifests in `@boilerbear/modules` (Day 7–10) ✅
 
 ### Step 2.1 — Package skeleton
 **Tasks**
@@ -200,7 +220,7 @@
 
 ---
 
-## Milestone 3 — CLI Shim `@boilerbear/cli` (Day 11–13)
+## Milestone 3 — CLI Shim `@boilerbear/cli` (Day 11–13) ✅
 
 ### Step 3.1 — CLI scaffold
 **Tasks**
@@ -224,7 +244,7 @@
 
 ---
 
-## Milestone 4 — Web App Skeleton (Day 14–17)
+## Milestone 4 — Web App Skeleton (Day 14–17) ✅
 
 ### Step 4.1 — Bootstrap `apps/web`
 **Tasks**
@@ -255,7 +275,7 @@
 
 ---
 
-## Milestone 5 — Builder UI (Day 18–25)
+## Milestone 5 — Builder UI (Day 18–25) ✅
 
 ### Step 5.1 — Store
 **Tasks**
@@ -295,7 +315,7 @@
 
 ---
 
-## Milestone 6 — Sharing & OG Images (Day 26–28)
+## Milestone 6 — Sharing & OG Images (Day 26–28) ✅
 
 ### Step 6.1 — Share view
 **Tasks**
@@ -320,7 +340,7 @@
 
 ---
 
-## Milestone 7 — Manifest Quality Gates (Day 29–32)
+## Milestone 7 — Manifest Quality Gates (Day 29–32) ⏳ Next
 
 ### Step 7.1 — Static validation in CI
 **Tasks**

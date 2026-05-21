@@ -17,7 +17,7 @@ export function hashToPlan(hash: string): Plan | null {
 
 export function buildShareUrl(plan: Plan, origin: string): string {
   const hash = planToHash(plan);
-  return `${origin}/s/${hash}`;
+  return `${origin}/s/${encodeURIComponent(hash)}`;
 }
 
 export function buildBuilderUrl(plan: Plan, origin?: string): string {
