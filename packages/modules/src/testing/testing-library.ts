@@ -10,6 +10,7 @@ export const testingLibrary: ModuleManifest = {
   license: 'MIT',
   popularity: 13_000_000,
   versions: { range: '^16.0.0', min: '16.0.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [

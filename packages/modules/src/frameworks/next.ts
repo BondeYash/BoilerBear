@@ -10,6 +10,7 @@ export const next: ModuleManifest = {
   license: 'MIT',
   popularity: 8_000_000,
   versions: { range: '^15.0.0', min: '15.0.0' },
+  languages: ['js'],
   packages: { deps: [], devDeps: [] },
   requires: [],
   conflicts: [],

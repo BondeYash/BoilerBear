@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Category, ModuleId, ModuleRef, PkgSpec } from './refs.js';
+import { Category, Language, ModuleId, ModuleRef, PkgSpec } from './refs.js';
 import { SetupStep } from './steps.js';
 
 export const OptionDef = z.discriminatedUnion('type', [
@@ -50,6 +50,7 @@ export const ModuleManifest = z.object({
   homepage: z.string().url(),
   license: z.string().default('MIT'),
   popularity: z.number().int().nonnegative().optional(),
+  languages: z.array(Language).default(['js']),
   versions: Versions,
   packages: z
     .object({

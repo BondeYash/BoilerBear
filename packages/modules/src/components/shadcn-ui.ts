@@ -10,6 +10,7 @@ export const shadcnUi: ModuleManifest = {
   license: 'MIT',
   popularity: 2_400_000,
   versions: { range: '^0.9.0', min: '0.9.0' },
+  languages: ['js'],
   packages: {
     deps: [
       { name: 'class-variance-authority', version: '^0.7.0' },

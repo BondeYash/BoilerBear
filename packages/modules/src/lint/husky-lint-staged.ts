@@ -10,6 +10,7 @@ export const huskyLintStaged: ModuleManifest = {
   license: 'MIT',
   popularity: 9_000_000,
   versions: { range: '^9.1.0', min: '9.1.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [

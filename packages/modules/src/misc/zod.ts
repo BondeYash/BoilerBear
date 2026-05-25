@@ -10,6 +10,7 @@ export const zod: ModuleManifest = {
   license: 'MIT',
   popularity: 28_000_000,
   versions: { range: '^3.23.0', min: '3.23.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'zod', version: '^3.23.0' }],
     devDeps: [],

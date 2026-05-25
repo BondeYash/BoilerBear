@@ -22,6 +22,7 @@ const safeOptionValue = fc.oneof(
 const planArb: fc.Arbitrary<Plan> = fc.record({
   v: fc.constant(1 as const),
   projectName: validName,
+  language: fc.constant('js' as const),
   packageManager: pm,
   base: id,
   modules: fc.array(id, { maxLength: 12 }),
@@ -33,6 +34,7 @@ describe('plan codec', () => {
     const plan: Plan = {
       v: 1,
       projectName: 'my-app',
+      language: 'js',
       packageManager: 'pnpm',
       base: 'vite',
       modules: ['tailwindcss', 'shadcn-ui'],
@@ -45,6 +47,7 @@ describe('plan codec', () => {
     const plan: Plan = {
       v: 1,
       projectName: 'my-app',
+      language: 'js',
       packageManager: 'pnpm',
       base: 'vite',
       modules: Array.from({ length: 10 }, (_, i) => `m-${i}`),
@@ -52,6 +55,19 @@ describe('plan codec', () => {
     };
     const hash = encodePlan(plan);
     expect(hash.length).toBeLessThan(400);
+  });
+
+  it('round-trips a Python plan with language preserved', () => {
+    const plan: Plan = {
+      v: 1,
+      projectName: 'svc',
+      language: 'py',
+      packageManager: 'uv',
+      base: 'fastapi',
+      modules: ['ruff', 'pytest'],
+      options: {},
+    };
+    expect(decodePlan(encodePlan(plan))).toEqual(plan);
   });
 
   it('throws CodecError on empty hash', () => {
@@ -75,5 +91,31 @@ describe('plan codec', () => {
   fcTest.prop([planArb])('round-trips arbitrary valid plans', (plan) => {
     const decoded = decodePlan(encodePlan(plan));
     expect(decoded).toEqual(plan);
+  });
+
+  // Captured 2026-05-25 from the live builder for plan:
+  //   { v:1, projectName:'my-app', packageManager:'pnpm', base:'vite',
+  //     modules:['tailwindcss','shadcn-ui'], options:{tailwindcss:{forms:true}} }
+  // This hash must keep decoding to the same plan and re-encoding to the same hash
+  // forever — Phase 2 introduces Plan.language with default 'js', and the encoder
+  // strips the field before stringify to preserve byte-identity for JS plans.
+  const FROZEN_HASH =
+    'N4IgbiBcCMA0IAcBOB7AVgUwMYBcByAhgLYZQhECeAtAQgiPAgVgNYEDmGAsgQHYcYkZBLwREGIAEYEAzqUjgAljlLwiKACYBXADYYZUANogcBRToDui3hqwyD8GQAsCt3lS2KQAXXgoEOIoovAaQoKbmVjZ2oaAAZihIRKE4SFoYAL5ZQA';
+  const FROZEN_PLAN: Plan = {
+    v: 1,
+    projectName: 'my-app',
+    language: 'js',
+    packageManager: 'pnpm',
+    base: 'vite',
+    modules: ['tailwindcss', 'shadcn-ui'],
+    options: { tailwindcss: { forms: true } },
+  };
+
+  it('decodes a captured production hash to the expected plan', () => {
+    expect(decodePlan(FROZEN_HASH)).toEqual(FROZEN_PLAN);
+  });
+
+  it('re-encodes the captured plan to the byte-identical hash', () => {
+    expect(encodePlan(FROZEN_PLAN)).toBe(FROZEN_HASH);
   });
 });

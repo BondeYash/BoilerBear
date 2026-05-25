@@ -10,6 +10,7 @@ export const reactRouter: ModuleManifest = {
   license: 'MIT',
   popularity: 14_000_000,
   versions: { range: '^6.28.0', min: '6.28.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'react-router-dom', version: '^6.28.0' }],
     devDeps: [],

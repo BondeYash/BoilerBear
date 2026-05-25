@@ -1,10 +1,48 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`emitCommand > snapshot — FastAPI (uv, pwsh) 1`] = `
+"$ErrorActionPreference='Stop'
+uv init svc
+Set-Location -LiteralPath 'svc'
+uv add fastapi==0.115.0 uvicorn==0.32.0
+New-Item -ItemType Directory -Force -Path 'app' | Out-Null
+@'
+from fastapi import FastAPI
+
+app = FastAPI()
+'@ | Set-Content -LiteralPath 'app/main.py' -NoNewline:$false"
+`;
+
+exports[`emitCommand > snapshot — FastAPI + Ruff (uv, bash) 1`] = `
+"set -euo pipefail
+uv init svc
+cd 'svc'
+uv add fastapi==0.115.0 uvicorn==0.32.0
+uv add --dev ruff==0.7.0
+mkdir -p 'app'
+cat > 'app/main.py' <<'BB_EOF'
+from fastapi import FastAPI
+
+app = FastAPI()
+BB_EOF"
+`;
+
 exports[`emitCommand > snapshot — Next + Zustand (bun) 1`] = `
 "set -euo pipefail
 bun create next-app@latest my-app --ts --tailwind --eslint --app
 cd 'my-app'
 bun add zustand@^5.0.0"
+`;
+
+exports[`emitCommand > snapshot — Vite + Tailwind (pwsh) 1`] = `
+"$ErrorActionPreference='Stop'
+pnpm create vite@latest my-app -- --template react-ts
+Set-Location -LiteralPath 'my-app'
+pnpm add -D autoprefixer@^10.4.0 postcss@^8.4.0 tailwindcss@^3.4.0
+New-Item -ItemType Directory -Force -Path '.' | Out-Null
+@'
+module.exports = { plugins: { tailwindcss: {}, autoprefixer: {} } };
+'@ | Set-Content -LiteralPath 'postcss.config.cjs' -NoNewline:$false"
 `;
 
 exports[`emitCommand > snapshot — Vite + Tailwind + shadcn (pnpm) 1`] = `

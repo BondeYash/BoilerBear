@@ -71,4 +71,43 @@ describe('Plan', () => {
     const result = Plan.safeParse({ projectName: '.hidden', base: 'vite' });
     expect(result.success).toBe(false);
   });
+
+  it("defaults language to 'js' when absent", () => {
+    const plan = Plan.parse({ projectName: 'my-app', base: 'vite' });
+    expect(plan.language).toBe('js');
+  });
+
+  it('accepts py + uv', () => {
+    const plan = Plan.parse({
+      projectName: 'svc',
+      base: 'fastapi',
+      language: 'py',
+      packageManager: 'uv',
+    });
+    expect(plan.language).toBe('py');
+    expect(plan.packageManager).toBe('uv');
+  });
+
+  it('rejects py + pnpm via superRefine', () => {
+    const result = Plan.safeParse({
+      projectName: 'svc',
+      base: 'fastapi',
+      language: 'py',
+      packageManager: 'pnpm',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0].path).toEqual(['packageManager']);
+    }
+  });
+
+  it('rejects rust + pip via superRefine', () => {
+    const result = Plan.safeParse({
+      projectName: 'svc',
+      base: 'axum',
+      language: 'rust',
+      packageManager: 'pip',
+    });
+    expect(result.success).toBe(false);
+  });
 });

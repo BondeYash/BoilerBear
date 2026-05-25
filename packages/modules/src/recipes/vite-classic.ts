@@ -8,6 +8,7 @@ export const viteClassic: Recipe = {
   tags: ['vite', 'react', 'spa', 'tailwind'],
   template: {
     v: 1,
+    language: 'js',
     packageManager: 'pnpm',
     base: 'vite',
     modules: [

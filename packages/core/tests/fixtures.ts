@@ -140,6 +140,64 @@ export const fixtureZustand: ModuleManifest = {
   maintainers: [],
 };
 
+export const fixtureFastapi: ModuleManifest = {
+  id: 'fastapi',
+  name: 'FastAPI',
+  category: 'framework',
+  tags: ['python', 'api'],
+  description: 'Python ASGI web framework.',
+  homepage: 'https://fastapi.tiangolo.com',
+  license: 'MIT',
+  languages: ['py'],
+  versions: { range: '^0.115.0', min: '0.115.0' },
+  packages: {
+    deps: [
+      { name: 'fastapi', version: '^0.115.0' },
+      { name: 'uvicorn', version: '^0.32.0' },
+    ],
+    devDeps: [],
+  },
+  requires: [],
+  conflicts: [],
+  recommends: [],
+  appliesTo: [],
+  framework: {
+    template: 'fastapi-uv',
+    createCommand: 'uv init {name}',
+  },
+  setup: [
+    {
+      kind: 'writeFile',
+      path: 'app/main.py',
+      content: 'from fastapi import FastAPI\n\napp = FastAPI()\n',
+      ifMissing: false,
+    },
+  ],
+  maintainers: [],
+};
+
+export const fixtureRuff: ModuleManifest = {
+  id: 'ruff',
+  name: 'Ruff',
+  category: 'lint',
+  tags: ['python', 'lint'],
+  description: 'Fast Python linter.',
+  homepage: 'https://docs.astral.sh/ruff',
+  license: 'MIT',
+  languages: ['py'],
+  versions: { range: '^0.7.0', min: '0.7.0' },
+  packages: {
+    deps: [],
+    devDeps: [{ name: 'ruff', version: '^0.7.0' }],
+  },
+  requires: [],
+  conflicts: [],
+  recommends: [],
+  appliesTo: ['fastapi'],
+  setup: [],
+  maintainers: [],
+};
+
 export const allFixtures: ModuleManifest[] = [
   fixtureVite,
   fixtureNext,
@@ -147,4 +205,6 @@ export const allFixtures: ModuleManifest[] = [
   fixtureShadcn,
   fixtureMui,
   fixtureZustand,
+  fixtureFastapi,
+  fixtureRuff,
 ];

@@ -10,8 +10,42 @@ export type ModuleId = z.infer<typeof ModuleId>;
 export const FrameworkId = ModuleId.brand<'FrameworkId'>();
 export type FrameworkId = z.infer<typeof FrameworkId>;
 
-export const PackageManager = z.enum(['pnpm', 'npm', 'yarn', 'bun']);
+export const Language = z.enum(['js', 'py', 'go', 'rust']);
+export type Language = z.infer<typeof Language>;
+
+export const PM_BY_LANGUAGE = {
+  js: ['pnpm', 'npm', 'yarn', 'bun'],
+  py: ['pip', 'uv', 'poetry'],
+  go: ['go'],
+  rust: ['cargo'],
+} as const satisfies Record<Language, ReadonlyArray<string>>;
+
+export const PackageManager = z.enum([
+  'pnpm',
+  'npm',
+  'yarn',
+  'bun',
+  'pip',
+  'uv',
+  'poetry',
+  'go',
+  'cargo',
+]);
 export type PackageManager = z.infer<typeof PackageManager>;
+
+export function pmsForLanguage(lang: Language): ReadonlyArray<PackageManager> {
+  return PM_BY_LANGUAGE[lang] as ReadonlyArray<PackageManager>;
+}
+
+export function languageForPm(pm: PackageManager): Language {
+  for (const lang of ['js', 'py', 'go', 'rust'] as const) {
+    if ((PM_BY_LANGUAGE[lang] as ReadonlyArray<string>).includes(pm)) return lang;
+  }
+  throw new Error(`Unknown package manager: ${pm}`);
+}
+
+export const Shell = z.enum(['bash', 'pwsh']);
+export type Shell = z.infer<typeof Shell>;
 
 export const Category = z.enum([
   'framework',

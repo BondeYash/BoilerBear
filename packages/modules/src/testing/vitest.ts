@@ -10,6 +10,7 @@ export const vitestModule: ModuleManifest = {
   license: 'MIT',
   popularity: 11_000_000,
   versions: { range: '^2.1.0', min: '2.1.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [

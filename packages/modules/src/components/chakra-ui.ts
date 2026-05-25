@@ -10,6 +10,7 @@ export const chakraUi: ModuleManifest = {
   license: 'MIT',
   popularity: 1_400_000,
   versions: { range: '^3.0.0', min: '3.0.0' },
+  languages: ['js'],
   packages: {
     deps: [
       { name: '@chakra-ui/react', version: '^3.0.0' },

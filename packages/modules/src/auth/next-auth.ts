@@ -11,6 +11,7 @@ export const nextAuth: ModuleManifest = {
   license: 'ISC',
   popularity: 5_300_000,
   versions: { range: '^5.0.0', min: '5.0.0-beta.20' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'next-auth', version: '^5.0.0-beta.20' }],
     devDeps: [],

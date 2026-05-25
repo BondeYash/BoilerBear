@@ -10,6 +10,7 @@ export const tanstackQuery: ModuleManifest = {
   license: 'MIT',
   popularity: 7_400_000,
   versions: { range: '^5.59.0', min: '5.59.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: '@tanstack/react-query', version: '^5.59.0' }],
     devDeps: [{ name: '@tanstack/react-query-devtools', version: '^5.59.0' }],

@@ -38,11 +38,12 @@ export function ModulesStep(): React.JSX.Element {
     for (const cat of VISIBLE_CATEGORIES) {
       const list = registry
         .byCategory(cat.id)
+        .filter((m) => m.languages.includes(plan.language))
         .filter((m) => m.appliesTo.length === 0 || m.appliesTo.includes(plan.base));
       if (list.length > 0) map.set(cat.id, list as ModuleManifest[]);
     }
     return map;
-  }, [registry, plan.base]);
+  }, [registry, plan.base, plan.language]);
 
   const tabs = VISIBLE_CATEGORIES.filter((c) => categories.has(c.id));
   const firstTab = tabs[0]?.id ?? 'styling';

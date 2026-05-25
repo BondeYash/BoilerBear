@@ -10,6 +10,7 @@ export const vite: ModuleManifest = {
   license: 'MIT',
   popularity: 16_000_000,
   versions: { range: '^5.4.0', min: '5.4.0' },
+  languages: ['js'],
   packages: { deps: [], devDeps: [] },
   requires: [],
   conflicts: [],

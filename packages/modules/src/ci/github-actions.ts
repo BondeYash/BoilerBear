@@ -9,6 +9,7 @@ export const githubActions: ModuleManifest = {
   homepage: 'https://github.com/features/actions',
   license: 'MIT',
   versions: { range: '*', min: '*' },
+  languages: ['js'],
   packages: { deps: [], devDeps: [] },
   requires: [],
   conflicts: [],

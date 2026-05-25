@@ -10,6 +10,7 @@ export const reactHookForm: ModuleManifest = {
   license: 'MIT',
   popularity: 11_000_000,
   versions: { range: '^7.53.0', min: '7.53.0' },
+  languages: ['js'],
   packages: {
     deps: [
       { name: 'react-hook-form', version: '^7.53.0' },

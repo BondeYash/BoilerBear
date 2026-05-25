@@ -10,6 +10,7 @@ export const clerk: ModuleManifest = {
   license: 'Proprietary',
   popularity: 1_700_000,
   versions: { range: '^6.0.0', min: '6.0.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: '@clerk/nextjs', version: '^6.0.0' }],
     devDeps: [],

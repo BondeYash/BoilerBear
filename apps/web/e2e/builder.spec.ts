@@ -31,6 +31,12 @@ test.describe('builder flow', () => {
     await expect(command).toContainText("bash -c '");
     await expect(command).toContainText('vite@latest');
     await expect(command).toContainText('tailwindcss');
+
+    // Switch to Windows (PowerShell) sub-tab and verify pwsh-flavoured output.
+    await page.getByRole('tab', { name: /Windows \(PowerShell\)/ }).click();
+    const pwshCommand = page.locator('pre').first();
+    await expect(pwshCommand).toContainText('pwsh -NoProfile -Command "');
+    await expect(pwshCommand).toContainText('Set-Content');
   });
 
   test('share URL restores the exact plan on reload', async ({ page, context }) => {

@@ -10,6 +10,7 @@ export const playwright: ModuleManifest = {
   license: 'Apache-2.0',
   popularity: 8_700_000,
   versions: { range: '^1.49.0', min: '1.49.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [{ name: '@playwright/test', version: '^1.49.0' }],

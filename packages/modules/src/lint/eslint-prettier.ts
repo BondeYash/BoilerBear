@@ -10,6 +10,7 @@ export const eslintPrettier: ModuleManifest = {
   license: 'MIT',
   popularity: 35_000_000,
   versions: { range: '^9.14.0', min: '9.14.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [

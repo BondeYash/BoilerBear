@@ -10,6 +10,7 @@ export const posthog: ModuleManifest = {
   license: 'MIT',
   popularity: 1_200_000,
   versions: { range: '^1.180.0', min: '1.180.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'posthog-js', version: '^1.180.0' }],
     devDeps: [],

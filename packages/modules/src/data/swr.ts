@@ -10,6 +10,7 @@ export const swr: ModuleManifest = {
   license: 'MIT',
   popularity: 2_300_000,
   versions: { range: '^2.2.0', min: '2.2.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'swr', version: '^2.2.0' }],
     devDeps: [],

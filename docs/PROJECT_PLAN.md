@@ -31,10 +31,11 @@ A *developer platform layer* sitting between npm and the editor: stack design �
 | Phase | Scope | Output |
 |-------|-------|--------|
 | **0 — Foundation** | Repo, design system, module registry schema, base UI flow | Empty registry + skeleton UI |
-| **1 — Command Generator** | Stack picker, recommendation engine, conflict detection, one-command output, shareable URLs | `npx boilerbear@latest run <hash>` or copy-paste shell |
-| **2 — Boilerplate Emitter** | Full repo generation (file tree, configs, sample features, CI) served as zip / `degit`-able git remote / live container | Downloadable repo, GitHub push, StackBlitz/CodeSandbox preview |
-| **3 — Team & Templates** | Auth, saved templates, team libraries, version locks, drift detection against existing repos | Org accounts, template marketplace |
-| **4 — Platform** | Plugin SDK for third-party tools, AI stack assistant, monetized hosted templates, enterprise self-host | Plugin registry + paid tiers |
+| **1 — Command Generator** ✅ closed | Stack picker, recommendation engine, conflict detection, one-command output, shareable URLs | `npx boilerbear@latest run <hash>` or copy-paste shell |
+| **2 — Multi-language + Windows** (in progress) | Python / Go / Rust language tracks, native PowerShell emission, Docker / DB / AI / DevContainer modules | Same one-command output across `js | py | go | rust` and `bash | pwsh` — see [`adr/0004`](adr/0004-multi-language-support.md), [`adr/0005`](adr/0005-multi-shell-emission.md), and the in-flight plan |
+| **3 — Boilerplate Emitter** | Full repo generation (file tree, configs, sample features, CI) served as zip / `degit`-able git remote / live container | Downloadable repo, GitHub push, StackBlitz/CodeSandbox preview |
+| **4 — Team & Templates** | Auth, saved templates, team libraries, version locks, drift detection against existing repos | Org accounts, template marketplace |
+| **5 — Platform** | Plugin SDK for third-party tools, AI stack assistant, monetized hosted templates, enterprise self-host | Plugin registry + paid tiers |
 
 ---
 

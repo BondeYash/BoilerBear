@@ -10,6 +10,7 @@ export const tailwindcss: ModuleManifest = {
   license: 'MIT',
   popularity: 22_000_000,
   versions: { range: '^3.4.0', min: '3.4.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [

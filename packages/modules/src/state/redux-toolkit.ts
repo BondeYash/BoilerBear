@@ -10,6 +10,7 @@ export const reduxToolkit: ModuleManifest = {
   license: 'MIT',
   popularity: 5_200_000,
   versions: { range: '^2.3.0', min: '2.3.0' },
+  languages: ['js'],
   packages: {
     deps: [
       { name: '@reduxjs/toolkit', version: '^2.3.0' },

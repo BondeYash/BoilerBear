@@ -14,12 +14,15 @@
  *
  * CLI:
  *   --matrix=pnpm,npm        package managers to test (default: pnpm)
+ *   --lang-matrix=js,py      languages to include (default: js)
  *   --filter=id1,id2         only these recipe ids
  *   --output=path/health.json output JSON path (default: repo-root manifest-health.json)
  *   --timeout=300            per-step seconds (default: 300)
  *   --keep                   keep temp dirs after run (debug)
  *   --tsc                    run `tsc --noEmit` after install (default: on)
  *   --no-tsc                 skip tsc check
+ *   --check-build            run per-language build check (tsc/ruff+pytest/go build/cargo check)
+ *   --no-check-build         skip build check (default for non-JS during rollout)
  */
 
 import { spawnSync } from 'node:child_process';
@@ -28,17 +31,19 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createRegistry, emitCommand } from '@boilerbear/core';
-import type { PackageManager, Plan } from '@boilerbear/core';
+import { createRegistry, emitCommand, pmsForLanguage } from '@boilerbear/core';
+import type { Language, PackageManager, Plan } from '@boilerbear/core';
 import { allManifests, allRecipes } from '../src/index.js';
 
 interface Args {
   matrix: PackageManager[];
+  langMatrix: Language[];
   filter: string[] | null;
   output: string;
   timeoutSec: number;
   keep: boolean;
   tsc: boolean;
+  checkBuild: boolean;
 }
 
 interface StepResult {
@@ -76,11 +81,13 @@ function parseArgs(): Args {
   const argv = process.argv.slice(2);
   const out: Args = {
     matrix: ['pnpm'],
+    langMatrix: ['js'],
     filter: null,
     output: resolve(rootDir(), 'manifest-health.json'),
     timeoutSec: 300,
     keep: false,
     tsc: true,
+    checkBuild: false,
   };
 
   for (const raw of argv) {
@@ -92,6 +99,12 @@ function parseArgs(): Args {
           .split(',')
           .map((s) => s.trim())
           .filter(Boolean) as PackageManager[];
+        break;
+      case 'lang-matrix':
+        out.langMatrix = (valueRaw ?? '')
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean) as Language[];
         break;
       case 'filter':
         out.filter = (valueRaw ?? '')
@@ -114,12 +127,19 @@ function parseArgs(): Args {
       case 'no-tsc':
         out.tsc = false;
         break;
+      case 'check-build':
+        out.checkBuild = true;
+        break;
+      case 'no-check-build':
+        out.checkBuild = false;
+        break;
       default:
         console.warn(`Unknown flag: --${key}`);
     }
   }
 
   if (out.matrix.length === 0) out.matrix = ['pnpm'];
+  if (out.langMatrix.length === 0) out.langMatrix = ['js'];
   return out;
 }
 
@@ -246,12 +266,21 @@ function runRecipe(
       return finish();
     }
 
-    if (args.tsc) {
-      const tscArgs =
-        pm === 'pnpm' ? ['exec', 'tsc', '--noEmit'] : ['exec', '--', 'tsc', '--noEmit'];
-      const tsc = runShell(pm, tscArgs, projectDir, args.timeoutSec, 'tsc');
-      steps.push(tsc);
-      if (!tsc.ok) ok = false;
+    // Per-language build check. JS uses tsc; Python uses ruff + pytest; Go uses go
+    // build; Rust uses cargo check. Defaults: JS = tsc on, others = check-build off
+    // during Phase 2 rollout (turn on once tooling stabilizes).
+    const lang = recipe.template.language;
+    const shouldCheck = lang === 'js' ? args.tsc : args.checkBuild;
+    if (shouldCheck) {
+      const checks = buildCheckCommand(lang, pm);
+      for (const c of checks) {
+        const result = runShell(c.cmd, c.args, projectDir, args.timeoutSec, 'tsc');
+        steps.push(result);
+        if (!result.ok) {
+          ok = false;
+          break;
+        }
+      }
     }
   } finally {
     if (!args.keep) {
@@ -280,13 +309,37 @@ function runRecipe(
   return finish();
 }
 
+function buildCheckCommand(
+  lang: Language,
+  pm: PackageManager,
+): ReadonlyArray<{ cmd: string; args: string[] }> {
+  switch (lang) {
+    case 'js': {
+      const tscArgs =
+        pm === 'pnpm' ? ['exec', 'tsc', '--noEmit'] : ['exec', '--', 'tsc', '--noEmit'];
+      return [{ cmd: pm, args: tscArgs }];
+    }
+    case 'py':
+      // Both ruff and pytest are gated behind --check-build; harmless when absent.
+      return [
+        { cmd: 'uv', args: ['run', 'ruff', 'check', '.'] },
+        { cmd: 'uv', args: ['run', 'pytest', '-q'] },
+      ];
+    case 'go':
+      return [{ cmd: 'go', args: ['build', './...'] }];
+    case 'rust':
+      return [{ cmd: 'cargo', args: ['check'] }];
+  }
+}
+
 function main(): void {
   const args = parseArgs();
   const registry = createRegistry(allManifests);
 
   const selected = allRecipes
     .map((r, i) => ({ r, i }))
-    .filter(({ r }) => (args.filter ? args.filter.includes(r.id) : true));
+    .filter(({ r }) => (args.filter ? args.filter.includes(r.id) : true))
+    .filter(({ r }) => args.langMatrix.includes(r.template.language));
 
   if (selected.length === 0) {
     console.error(
@@ -298,12 +351,19 @@ function main(): void {
   }
 
   console.log(
-    `Running install matrix: ${selected.length} recipe(s) × ${args.matrix.join(',')} pm(s) (timeout ${args.timeoutSec}s, tsc=${args.tsc}).`,
+    `Running install matrix: ${selected.length} recipe(s) × ${args.matrix.join(',')} pm(s) ` +
+      `× langs=${args.langMatrix.join(',')} (timeout ${args.timeoutSec}s, tsc=${args.tsc}, check-build=${args.checkBuild}).`,
   );
 
   const results: RecipeResult[] = [];
   for (const { r, i } of selected) {
+    const validPms = pmsForLanguage(r.template.language);
     for (const pm of args.matrix) {
+      if (!validPms.includes(pm)) {
+        // PM not valid for this recipe's language — skip silently rather than
+        // emit a runtime EmitterError. Keep the matrix clean.
+        continue;
+      }
       const label = `${r.id} @ ${pm}`;
       const startedAt = Date.now();
       process.stdout.write(`  ▶ ${label} … `);

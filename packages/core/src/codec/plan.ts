@@ -16,7 +16,13 @@ export class CodecError extends Error {
 /** Encode a Plan to a URL-safe string. Output is base64url-ish (lz-string EncodedURIComponent). */
 export function encodePlan(plan: Plan): string {
   const validated = Plan.parse(plan);
-  const json = JSON.stringify(validated);
+  // Strip the default `language: 'js'` so JS plans hash byte-identical to pre-Phase-2
+  // payloads. Decode unaffected: Zod re-applies the default when the field is absent.
+  const minimal: Record<string, unknown> = { ...validated };
+  if (minimal.language === 'js') {
+    minimal.language = undefined;
+  }
+  const json = JSON.stringify(minimal);
   return compressToEncodedURIComponent(json);
 }
 

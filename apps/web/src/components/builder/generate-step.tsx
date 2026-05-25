@@ -1,28 +1,35 @@
 'use client';
 
 import { getRegistry } from '@/lib/registry';
+import { useShellDefault } from '@/lib/share/shell-default';
 import { buildShareUrl } from '@/lib/share/url';
 import { useBuilder } from '@/lib/store/builder';
-import { EmitterError, emitCommand } from '@boilerbear/core';
+import { EmitterError, type Shell, emitCommand } from '@boilerbear/core';
 import { Button } from '@boilerbear/ui/components/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@boilerbear/ui/components/tabs';
-import { Check, Copy, Link as LinkIcon, Terminal } from 'lucide-react';
+import {
+  AlertTriangle,
+  Apple,
+  Check,
+  Copy,
+  Link as LinkIcon,
+  Square,
+  Terminal,
+} from 'lucide-react';
 import * as React from 'react';
 
 export function GenerateStep(): React.JSX.Element {
   const plan = useBuilder((s) => s.plan);
   const registry = React.useMemo(() => getRegistry(), []);
+  const defaultShell = useShellDefault();
+  const [shellTab, setShellTab] = React.useState<Shell>('bash');
+  React.useEffect(() => {
+    setShellTab(defaultShell);
+  }, [defaultShell]);
 
-  const result = React.useMemo(() => {
-    try {
-      return { ok: true as const, value: emitCommand(plan, registry) };
-    } catch (err) {
-      if (err instanceof EmitterError) {
-        return { ok: false as const, error: err.message };
-      }
-      throw err;
-    }
-  }, [plan, registry]);
+  const bashResult = React.useMemo(() => safeEmit(plan, registry, 'bash'), [plan, registry]);
+  const pwshResult = React.useMemo(() => safeEmit(plan, registry, 'pwsh'), [plan, registry]);
+  const result = shellTab === 'pwsh' ? pwshResult : bashResult;
 
   const [origin, setOrigin] = React.useState('');
   React.useEffect(() => {
@@ -59,17 +66,35 @@ export function GenerateStep(): React.JSX.Element {
           </TabsList>
 
           <TabsContent value="command">
-            <CodeBlock label="One-liner" value={result.value.command} />
-            <p className="mt-2 text-xs text-muted-foreground">
-              Or run it via the CLI shim (Phase 1 stays stateless — pipe the plan via stdin):
+            <Tabs value={shellTab} onValueChange={(v) => setShellTab(v as Shell)}>
+              <TabsList>
+                <TabsTrigger value="bash">
+                  <Apple className="mr-2 h-4 w-4" />
+                  macOS / Linux
+                </TabsTrigger>
+                <TabsTrigger value="pwsh">
+                  <Square className="mr-2 h-4 w-4" />
+                  Windows (PowerShell)
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="bash">
+                <CodeBlock label="One-liner (bash)" value={result.value.command} />
+                <FullScript script={result.value.script} />
+              </TabsContent>
+
+              <TabsContent value="pwsh">
+                <PwshWarnings warnings={result.value.warnings} />
+                <CodeBlock label="One-liner (pwsh)" value={result.value.command} />
+                <FullScript script={result.value.script} />
+              </TabsContent>
+            </Tabs>
+
+            <p className="mt-3 text-xs text-muted-foreground">
+              Or run it via the CLI shim (Phase 1 stays stateless — pipe the plan via stdin; the CLI
+              uses bash):
             </p>
             <CodeBlock label="CLI" value={cliInvocation} />
-            <details className="mt-3 rounded-md border bg-muted/40 p-3">
-              <summary className="cursor-pointer text-xs font-medium">View full script</summary>
-              <pre className="mt-2 overflow-x-auto whitespace-pre rounded bg-background p-3 font-mono text-[11px]">
-                {result.value.script}
-              </pre>
-            </details>
           </TabsContent>
 
           <TabsContent value="share">
@@ -81,6 +106,60 @@ export function GenerateStep(): React.JSX.Element {
         </Tabs>
       )}
     </div>
+  );
+}
+
+function safeEmit(
+  plan: Parameters<typeof emitCommand>[0],
+  registry: Parameters<typeof emitCommand>[1],
+  shell: Shell,
+): { ok: true; value: ReturnType<typeof emitCommand> } | { ok: false; error: string } {
+  try {
+    return { ok: true, value: emitCommand(plan, registry, { shell }) };
+  } catch (err) {
+    if (err instanceof EmitterError) return { ok: false, error: err.message };
+    throw err;
+  }
+}
+
+function PwshWarnings({
+  warnings,
+}: {
+  warnings: ReturnType<typeof emitCommand>['warnings'];
+}): React.JSX.Element | null {
+  const unsupported = warnings.filter((w) => w.code === 'pwsh-unsupported-shell-step');
+  if (unsupported.length === 0) return null;
+  return (
+    <div
+      role="alert"
+      className="mb-3 flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-900 dark:text-amber-200"
+    >
+      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+      <div>
+        <p className="font-medium">This stack uses shell steps not yet ported to PowerShell.</p>
+        <p className="mt-1">
+          Use the macOS / Linux tab, or contribute a <code>pwshCommand</code> on the offending
+          module
+          {unsupported.length === 1 ? '' : 's'}:{' '}
+          {unsupported
+            .map((w) => w.moduleId)
+            .filter(Boolean)
+            .join(', ') || 'unknown'}
+          .
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function FullScript({ script }: { script: string }): React.JSX.Element {
+  return (
+    <details className="mt-3 rounded-md border bg-muted/40 p-3">
+      <summary className="cursor-pointer text-xs font-medium">View full script</summary>
+      <pre className="mt-2 overflow-x-auto whitespace-pre rounded bg-background p-3 font-mono text-[11px]">
+        {script}
+      </pre>
+    </details>
   );
 }
 

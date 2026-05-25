@@ -1,8 +1,15 @@
+import { djangoStarter } from './django-starter.js';
+import { fastapiStarter } from './fastapi-starter.js';
 import { nextSaasStarter } from './next-saas-starter.js';
 import type { Recipe } from './types.js';
 import { viteClassic } from './vite-classic.js';
 
-export const allRecipes: ReadonlyArray<Recipe> = [viteClassic, nextSaasStarter];
+export const allRecipes: ReadonlyArray<Recipe> = [
+  viteClassic,
+  nextSaasStarter,
+  fastapiStarter,
+  djangoStarter,
+];
 
-export { viteClassic, nextSaasStarter };
+export { viteClassic, nextSaasStarter, fastapiStarter, djangoStarter };
 export type { Recipe } from './types.js';

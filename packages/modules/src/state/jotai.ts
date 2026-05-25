@@ -10,6 +10,7 @@ export const jotai: ModuleManifest = {
   license: 'MIT',
   popularity: 1_500_000,
   versions: { range: '^2.10.0', min: '2.10.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'jotai', version: '^2.10.0' }],
     devDeps: [],

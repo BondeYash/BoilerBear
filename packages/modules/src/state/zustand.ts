@@ -10,6 +10,7 @@ export const zustand: ModuleManifest = {
   license: 'MIT',
   popularity: 5_800_000,
   versions: { range: '^5.0.0', min: '5.0.0' },
+  languages: ['js'],
   packages: {
     deps: [{ name: 'zustand', version: '^5.0.0' }],
     devDeps: [],

@@ -1,13 +1,22 @@
-import type { PackageManager, Plan } from '@boilerbear/core';
+import { type Language, type PackageManager, type Plan, pmsForLanguage } from '@boilerbear/core';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
 export const STEP_COUNT = 5;
 
+/** Default framework + PM per language — fed to setLanguage when the user switches axis. */
+const LANGUAGE_DEFAULTS: Record<Language, { base: string; packageManager: PackageManager }> = {
+  js: { base: 'vite', packageManager: 'pnpm' },
+  py: { base: 'fastapi', packageManager: 'uv' },
+  go: { base: 'gin', packageManager: 'go' },
+  rust: { base: 'axum', packageManager: 'cargo' },
+};
+
 export interface BuilderState {
   plan: Plan;
   step: number;
   setProjectName: (name: string) => void;
+  setLanguage: (lang: Language) => void;
   setPM: (pm: PackageManager) => void;
   setBase: (id: string) => void;
   toggleModule: (id: string) => void;
@@ -21,6 +30,7 @@ export interface BuilderState {
 const initialPlan: Plan = {
   v: 1,
   projectName: 'my-app',
+  language: 'js',
   packageManager: 'pnpm',
   base: 'vite',
   modules: [],
@@ -34,7 +44,30 @@ export const useBuilder = create<BuilderState>()(
 
     setProjectName: (name) => set((s) => ({ plan: { ...s.plan, projectName: name } })),
 
-    setPM: (pm) => set((s) => ({ plan: { ...s.plan, packageManager: pm } })),
+    setLanguage: (lang) =>
+      set((s) => {
+        if (s.plan.language === lang) return s;
+        const defaults = LANGUAGE_DEFAULTS[lang];
+        // Switching language clears base + modules — a Vite + Python plan is incoherent.
+        return {
+          plan: {
+            ...s.plan,
+            language: lang,
+            base: defaults.base,
+            packageManager: defaults.packageManager,
+            modules: [],
+            options: {},
+          },
+        };
+      }),
+
+    setPM: (pm) =>
+      set((s) => {
+        // Guard: keep PM inside the current language's valid set.
+        const allowed = pmsForLanguage(s.plan.language);
+        if (!allowed.includes(pm)) return s;
+        return { plan: { ...s.plan, packageManager: pm } };
+      }),
 
     setBase: (id) =>
       set((s) => {

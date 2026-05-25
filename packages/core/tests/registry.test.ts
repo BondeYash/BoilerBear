@@ -12,7 +12,7 @@ describe('createRegistry', () => {
         .frameworks()
         .map((m) => m.id)
         .sort(),
-    ).toEqual(['next', 'vite']);
+    ).toEqual(['fastapi', 'next', 'vite']);
     expect(
       reg
         .byCategory('components')

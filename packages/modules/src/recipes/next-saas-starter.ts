@@ -8,6 +8,7 @@ export const nextSaasStarter: Recipe = {
   tags: ['next', 'saas', 'clerk', 'tailwind'],
   template: {
     v: 1,
+    language: 'js',
     packageManager: 'pnpm',
     base: 'next',
     modules: [

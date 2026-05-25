@@ -43,6 +43,7 @@ export type EnvVarStep = z.infer<typeof EnvVarStep>;
 export const ShellStep = z.object({
   kind: z.literal('shell'),
   command: z.string().min(1),
+  pwshCommand: z.string().min(1).optional(),
   when: z.enum(['preInstall', 'postInstall']).default('postInstall'),
 });
 export type ShellStep = z.infer<typeof ShellStep>;

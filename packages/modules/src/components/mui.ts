@@ -10,6 +10,7 @@ export const mui: ModuleManifest = {
   license: 'MIT',
   popularity: 4_300_000,
   versions: { range: '^6.1.0', min: '6.1.0' },
+  languages: ['js'],
   packages: {
     deps: [
       { name: '@mui/material', version: '^6.1.0' },

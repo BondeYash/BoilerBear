@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ModuleId, Severity } from './refs.js';
+import { ModuleId, Severity, Shell } from './refs.js';
 
 export const PlanWarning = z.object({
   code: z.string().min(1),
@@ -24,6 +24,7 @@ export const CompiledPlan = z.object({
   moduleOrder: z.array(ModuleId),
   resolvedPackages: z.array(ResolvedPackage),
   command: z.string(),
+  shell: Shell.default('bash'),
   warnings: z.array(PlanWarning),
 });
 export type CompiledPlan = z.infer<typeof CompiledPlan>;

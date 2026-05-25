@@ -76,6 +76,8 @@ for (const manifest of allManifests) {
   }
 }
 
+const manifestById = new Map(allManifests.map((m) => [m.id, m]));
+
 for (const recipe of allRecipes) {
   const where = `[recipe:${recipe.id}]`;
   if (!frameworkIds.has(recipe.template.base)) {
@@ -84,6 +86,25 @@ for (const recipe of allRecipes) {
   for (const id of recipe.template.modules) {
     if (!knownIds.has(id)) {
       errors.push(`${where} references unknown module "${id}"`);
+    }
+  }
+
+  // Language cross-check: every module (including the base) must list the
+  // recipe's language in its `languages` array, otherwise the resolver would
+  // happily wire a JS module into a Python plan and fail at install time.
+  const recipeLang = recipe.template.language;
+  const baseManifest = manifestById.get(recipe.template.base);
+  if (baseManifest && !baseManifest.languages.includes(recipeLang)) {
+    errors.push(
+      `${where} base "${baseManifest.id}" does not support language "${recipeLang}" (its languages: ${baseManifest.languages.join(', ')})`,
+    );
+  }
+  for (const id of recipe.template.modules) {
+    const m = manifestById.get(id);
+    if (m && !m.languages.includes(recipeLang)) {
+      errors.push(
+        `${where} module "${id}" does not support language "${recipeLang}" (its languages: ${m.languages.join(', ')})`,
+      );
     }
   }
 
@@ -97,8 +118,26 @@ for (const recipe of allRecipes) {
   try {
     sortModules(plan, registry);
     emitCommand(plan, registry);
+    // Also assert the pwsh dialect compiles without throwing — bash and pwsh
+    // share the same step graph, so a missing pwshCommand surfaces as a warning
+    // only; an EmitterError would indicate a deeper problem.
+    emitCommand(plan, registry, { shell: 'pwsh' });
   } catch (err) {
     errors.push(`${where} emitCommand failed: ${(err as Error).message}`);
+  }
+}
+
+// Manifest-level: warn (don't fail) when a Go/Rust manifest uses patchJson —
+// it'll throw at emit time. Surfaces as an error here so authors notice early.
+for (const manifest of allManifests) {
+  const isNonJs = manifest.languages.length > 0 && !manifest.languages.includes('js');
+  if (!isNonJs) continue;
+  for (const step of manifest.setup) {
+    if (step.kind === 'patchJson' || step.kind === 'appendScript') {
+      errors.push(
+        `[${manifest.id}] uses "${step.kind}" but languages=[${manifest.languages.join(',')}] do not include js — emitter will reject at runtime`,
+      );
+    }
   }
 }
 

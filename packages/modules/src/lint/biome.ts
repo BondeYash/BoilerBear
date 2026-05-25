@@ -10,6 +10,7 @@ export const biome: ModuleManifest = {
   license: 'MIT',
   popularity: 2_900_000,
   versions: { range: '^1.9.0', min: '1.9.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [{ name: '@biomejs/biome', version: '^1.9.0' }],

@@ -10,6 +10,7 @@ export const sass: ModuleManifest = {
   license: 'MIT',
   popularity: 14_000_000,
   versions: { range: '^1.80.0', min: '1.80.0' },
+  languages: ['js'],
   packages: {
     deps: [],
     devDeps: [{ name: 'sass', version: '^1.80.0' }],

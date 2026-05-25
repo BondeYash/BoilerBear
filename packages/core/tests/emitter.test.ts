@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { heredocBody, shellSingleQuote } from '../src/emitter/escape.js';
+import {
+  heredocBody,
+  pwshHereString,
+  pwshSingleQuote,
+  shellSingleQuote,
+} from '../src/emitter/escape.js';
 import { getPm, renderCreateCommand } from '../src/emitter/pm.js';
 import { EmitterError, createRegistry, emitCommand } from '../src/index.js';
 import type { ModuleManifest, Plan } from '../src/index.js';
@@ -10,6 +15,7 @@ const registry = createRegistry(allFixtures);
 const plan = (overrides: Partial<Plan> = {}): Plan => ({
   v: 1,
   projectName: 'my-app',
+  language: 'js',
   packageManager: 'pnpm',
   base: 'vite',
   modules: [],
@@ -109,6 +115,133 @@ describe('emitCommand', () => {
     const reg = createRegistry([noFramework]);
     expect(() => emitCommand(plan({ base: 'bare' }), reg)).toThrow(EmitterError);
   });
+
+  it('default shell is bash — result.shell === "bash"', () => {
+    const result = emitCommand(plan({ modules: ['tailwindcss'] }), registry);
+    expect(result.shell).toBe('bash');
+    expect(result.command.startsWith("bash -c '")).toBe(true);
+  });
+
+  it('emits a pwsh one-liner when { shell: "pwsh" } is passed', () => {
+    const result = emitCommand(plan({ modules: ['tailwindcss'] }), registry, { shell: 'pwsh' });
+    expect(result.shell).toBe('pwsh');
+    expect(result.command.startsWith('pwsh -NoProfile -Command "')).toBe(true);
+    expect(result.script).toContain("$ErrorActionPreference='Stop'");
+    expect(result.script).toContain("Set-Location -LiteralPath 'my-app'");
+    expect(result.script).toContain('Set-Content -LiteralPath');
+    expect(result.script).toContain("@'\n");
+  });
+
+  it('snapshot — Vite + Tailwind (pwsh)', () => {
+    const result = emitCommand(plan({ modules: ['tailwindcss'] }), registry, { shell: 'pwsh' });
+    expect(result.script).toMatchSnapshot();
+  });
+
+  it('skips shell step without pwshCommand on pwsh and pushes a warning', () => {
+    const withShell: ModuleManifest = {
+      ...fixtureVite,
+      id: 'bash-only',
+      category: 'misc',
+      framework: undefined,
+      appliesTo: ['vite'],
+      setup: [{ kind: 'shell', command: 'echo only-bash', when: 'postInstall' }],
+    };
+    const reg = createRegistry([fixtureVite, withShell]);
+    const result = emitCommand(plan({ modules: ['bash-only'] }), reg, { shell: 'pwsh' });
+    expect(result.script).not.toContain('echo only-bash');
+    expect(result.warnings.some((w) => w.code === 'pwsh-unsupported-shell-step')).toBe(true);
+  });
+
+  it('emits a Python plan with uv add for deps', () => {
+    const pyPlan: Plan = {
+      v: 1,
+      projectName: 'svc',
+      language: 'py',
+      packageManager: 'uv',
+      base: 'fastapi',
+      modules: ['ruff'],
+      options: {},
+    };
+    const result = emitCommand(pyPlan, registry);
+    expect(result.script).toContain('uv init svc');
+    expect(result.script).toContain("cd 'svc'");
+    expect(result.script).toContain('uv add fastapi==0.115.0');
+    expect(result.script).toContain('uv add --dev ruff==0.7.0');
+    expect(result.script).toContain("cat > 'app/main.py'");
+  });
+
+  it('snapshot — FastAPI + Ruff (uv, bash)', () => {
+    const pyPlan: Plan = {
+      v: 1,
+      projectName: 'svc',
+      language: 'py',
+      packageManager: 'uv',
+      base: 'fastapi',
+      modules: ['ruff'],
+      options: {},
+    };
+    expect(emitCommand(pyPlan, registry).script).toMatchSnapshot();
+  });
+
+  it('snapshot — FastAPI (uv, pwsh)', () => {
+    const pyPlan: Plan = {
+      v: 1,
+      projectName: 'svc',
+      language: 'py',
+      packageManager: 'uv',
+      base: 'fastapi',
+      modules: [],
+      options: {},
+    };
+    expect(emitCommand(pyPlan, registry, { shell: 'pwsh' }).script).toMatchSnapshot();
+  });
+
+  it('throws when patchJson is used in a non-JS plan', () => {
+    const badPython: ModuleManifest = {
+      ...fixtureVite,
+      id: 'py-patch',
+      category: 'misc',
+      framework: undefined,
+      languages: ['py'],
+      appliesTo: ['fastapi'],
+      setup: [{ kind: 'patchJson', path: 'pyproject.toml', patch: { name: 'svc' } }],
+    };
+    const reg = createRegistry([...allFixtures, badPython]);
+    const pyPlan: Plan = {
+      v: 1,
+      projectName: 'svc',
+      language: 'py',
+      packageManager: 'uv',
+      base: 'fastapi',
+      modules: ['py-patch'],
+      options: {},
+    };
+    expect(() => emitCommand(pyPlan, reg)).toThrow(EmitterError);
+  });
+
+  it('uses pwshCommand on pwsh when provided', () => {
+    const withShell: ModuleManifest = {
+      ...fixtureVite,
+      id: 'dual-shell',
+      category: 'misc',
+      framework: undefined,
+      appliesTo: ['vite'],
+      setup: [
+        {
+          kind: 'shell',
+          command: 'echo from-bash',
+          pwshCommand: 'Write-Host from-pwsh',
+          when: 'postInstall',
+        },
+      ],
+    };
+    const reg = createRegistry([fixtureVite, withShell]);
+    const bashResult = emitCommand(plan({ modules: ['dual-shell'] }), reg);
+    const pwshResult = emitCommand(plan({ modules: ['dual-shell'] }), reg, { shell: 'pwsh' });
+    expect(bashResult.script).toContain('echo from-bash');
+    expect(pwshResult.script).toContain('Write-Host from-pwsh');
+    expect(pwshResult.script).not.toContain('echo from-bash');
+  });
 });
 
 describe('escape helpers', () => {
@@ -124,10 +257,22 @@ describe('escape helpers', () => {
   it('rejects heredoc marker collisions', () => {
     expect(() => heredocBody('contains BB_EOF inside')).toThrow();
   });
+
+  it('pwshSingleQuote doubles embedded single quotes', () => {
+    expect(pwshSingleQuote("it's")).toBe("'it''s'");
+    expect(pwshSingleQuote('plain')).toBe("'plain'");
+  });
+
+  it('pwshHereString wraps content and rejects "\'@" sentinel collisions', () => {
+    expect(pwshHereString('hello')).toBe("@'\nhello\n'@");
+    expect(() => pwshHereString("line1\n'@\nline2")).toThrow();
+    // '@ inside a line (not on its own) is OK
+    expect(pwshHereString("ok '@ inline")).toBe("@'\nok '@ inline\n'@");
+  });
 });
 
 describe('pm helpers', () => {
-  it('exposes commands for every supported package manager', () => {
+  it('exposes commands for every supported JS package manager', () => {
     for (const id of ['pnpm', 'npm', 'yarn', 'bun'] as const) {
       const pm = getPm(id);
       expect(pm.install).toContain(id);
@@ -138,6 +283,28 @@ describe('pm helpers', () => {
       expect(pm.exec('foo')).toMatch(/foo/);
       expect(pm.runScript('build')).toContain('build');
     }
+  });
+
+  it('exposes commands for every supported Python package manager', () => {
+    for (const id of ['pip', 'uv', 'poetry'] as const) {
+      const pm = getPm(id);
+      expect(pm.add([])).toBe('');
+      const add = pm.add([{ name: 'fastapi', version: '^0.115.0' }]);
+      // pip/uv/poetry render python specs as name==version, with the caret stripped.
+      expect(add).toContain('fastapi==0.115.0');
+    }
+  });
+
+  it('exposes commands for go and cargo', () => {
+    const goPm = getPm('go');
+    expect(goPm.install).toBe('go mod tidy');
+    expect(goPm.add([{ name: 'github.com/gin-gonic/gin', version: 'v1.10.0' }])).toContain(
+      'go get',
+    );
+
+    const cargoPm = getPm('cargo');
+    expect(cargoPm.install).toBe('cargo build');
+    expect(cargoPm.add([{ name: 'axum', version: '0.7.5' }])).toContain('cargo add');
   });
 
   it('leaves unknown template placeholders intact', () => {

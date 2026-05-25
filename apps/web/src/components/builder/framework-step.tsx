@@ -8,8 +8,15 @@ import * as React from 'react';
 
 export function FrameworkStep(): React.JSX.Element {
   const base = useBuilder((s) => s.plan.base);
+  const language = useBuilder((s) => s.plan.language);
   const setBase = useBuilder((s) => s.setBase);
-  const frameworks = React.useMemo(() => getRegistry().frameworks(), []);
+  const frameworks = React.useMemo(
+    () =>
+      getRegistry()
+        .frameworks()
+        .filter((f) => f.languages.includes(language)),
+    [language],
+  );
 
   return (
     <div className="grid gap-4">

@@ -30,6 +30,7 @@ describe('loadPlan', () => {
     const original = {
       v: 1 as const,
       projectName: 'my-app',
+      language: 'js' as const,
       packageManager: 'pnpm' as const,
       base: 'vite',
       modules: ['tailwindcss'],
