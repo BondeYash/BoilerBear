@@ -1,12 +1,16 @@
 import type { ModuleManifest } from '@boilerbear/core';
 
+import { vercelAiSdk } from './ai/vercel-ai-sdk.js';
 import { posthog } from './analytics/posthog.js';
 import { clerk } from './auth/clerk.js';
 import { nextAuth } from './auth/next-auth.js';
 import { githubActions } from './ci/github-actions.js';
+import { vercel } from './ci/vercel.js';
 import { chakraUi } from './components/chakra-ui.js';
+import { framerMotion } from './components/framer-motion.js';
 import { mui } from './components/mui.js';
 import { shadcnUi } from './components/shadcn-ui.js';
+import { storybook } from './components/storybook.js';
 import { swr } from './data/swr.js';
 import { tanstackQuery } from './data/tanstack-query.js';
 import { betterSqlite3 } from './database/better-sqlite3.js';
@@ -49,8 +53,27 @@ import { sendgridMail } from './email/sendgrid-mail.js';
 import { ses } from './email/ses.js';
 import { sparkpost } from './email/sparkpost.js';
 import { zeptomail } from './email/zeptomail.js';
+import { alpine } from './frameworks/alpine.js';
+import { angular } from './frameworks/angular.js';
+import { astro } from './frameworks/astro.js';
+import { ember } from './frameworks/ember.js';
+import { htmx } from './frameworks/htmx.js';
+import { lit } from './frameworks/lit.js';
+import { marko } from './frameworks/marko.js';
+import { mithril } from './frameworks/mithril.js';
 import { next } from './frameworks/next.js';
+import { nuxt } from './frameworks/nuxt.js';
+import { preact } from './frameworks/preact.js';
+import { qwik } from './frameworks/qwik.js';
+import { react } from './frameworks/react.js';
+import { remix } from './frameworks/remix.js';
+import { solidStart } from './frameworks/solid-start.js';
+import { solid } from './frameworks/solid.js';
+import { stencil } from './frameworks/stencil.js';
+import { svelte } from './frameworks/svelte.js';
+import { sveltekit } from './frameworks/sveltekit.js';
 import { vite } from './frameworks/vite.js';
+import { vue } from './frameworks/vue.js';
 import { apisauce } from './http/apisauce.js';
 import { axios } from './http/axios.js';
 import { crossFetch } from './http/cross-fetch.js';
@@ -74,7 +97,13 @@ import { wretch } from './http/wretch.js';
 import { biome } from './lint/biome.js';
 import { eslintPrettier } from './lint/eslint-prettier.js';
 import { huskyLintStaged } from './lint/husky-lint-staged.js';
+import { dompurify } from './misc/dompurify.js';
+import { reactHelmetAsync } from './misc/react-helmet-async.js';
 import { reactHookForm } from './misc/react-hook-form.js';
+import { reactI18next } from './misc/react-i18next.js';
+import { sanity } from './misc/sanity.js';
+import { sentryReact } from './misc/sentry-react.js';
+import { socketIoClient } from './misc/socket-io-client.js';
 import { zod } from './misc/zod.js';
 import { bookshelf } from './orm/bookshelf.js';
 import { drizzleOrm } from './orm/drizzle-orm.js';
@@ -96,6 +125,7 @@ import { typegoose } from './orm/typegoose.js';
 import { typeorm } from './orm/typeorm.js';
 import { waterline } from './orm/waterline.js';
 import { zapatos } from './orm/zapatos.js';
+import { stripeJs } from './payments/stripe-js.js';
 import { django } from './py/frameworks/django.js';
 import { fastapi } from './py/frameworks/fastapi.js';
 import { flask } from './py/frameworks/flask.js';
@@ -107,6 +137,7 @@ import { reactRouter } from './routing/react-router.js';
 import { jotai } from './state/jotai.js';
 import { reduxToolkit } from './state/redux-toolkit.js';
 import { zustand } from './state/zustand.js';
+import { uploadthing } from './storage/uploadthing.js';
 import { playwright } from './testing/playwright.js';
 import { testingLibrary } from './testing/testing-library.js';
 import { vitestModule } from './testing/vitest.js';
@@ -231,6 +262,39 @@ export const allManifests: ReadonlyArray<ModuleManifest> = [
   plunk,
   courier,
   zeptomail,
+  // Phase 2 — JS frameworks
+  react,
+  vue,
+  svelte,
+  angular,
+  solid,
+  qwik,
+  astro,
+  nuxt,
+  remix,
+  sveltekit,
+  solidStart,
+  preact,
+  lit,
+  alpine,
+  htmx,
+  ember,
+  mithril,
+  stencil,
+  marko,
+  // Phase 2 M2.0 — React slot manifests
+  framerMotion,
+  vercel,
+  sentryReact,
+  stripeJs,
+  socketIoClient,
+  uploadthing,
+  reactI18next,
+  reactHelmetAsync,
+  sanity,
+  vercelAiSdk,
+  storybook,
+  dompurify,
 ];
 
 export {
@@ -346,6 +410,39 @@ export {
   zeptomail,
   zod,
   zustand,
+  // Phase 2 — JS frameworks
+  react,
+  vue,
+  svelte,
+  angular,
+  solid,
+  qwik,
+  astro,
+  nuxt,
+  remix,
+  sveltekit,
+  solidStart,
+  preact,
+  lit,
+  alpine,
+  htmx,
+  ember,
+  mithril,
+  stencil,
+  marko,
+  // Phase 2 M2.0 — React slot manifests
+  framerMotion,
+  vercel,
+  sentryReact,
+  stripeJs,
+  socketIoClient,
+  uploadthing,
+  reactI18next,
+  reactHelmetAsync,
+  sanity,
+  vercelAiSdk,
+  storybook,
+  dompurify,
 };
 
 export {
@@ -353,6 +450,7 @@ export {
   djangoStarter,
   fastapiStarter,
   nextSaasStarter,
+  reactViteStarter,
   viteClassic,
 } from './recipes/index.js';
 export type { Recipe } from './recipes/types.js';

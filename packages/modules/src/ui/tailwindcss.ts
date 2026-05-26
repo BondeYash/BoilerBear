@@ -22,7 +22,7 @@ export const tailwindcss: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [{ id: 'shadcn-ui', reason: 'shadcn/ui is built directly on Tailwind.' }],
-  appliesTo: ['vite', 'next'],
+  appliesTo: ['vite', 'next', 'react'],
   options: {
     plugins: {
       type: 'multiselect',

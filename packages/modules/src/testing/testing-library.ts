@@ -22,7 +22,7 @@ export const testingLibrary: ModuleManifest = {
   requires: [{ id: 'vitest', severity: 'warning', reason: 'Pair with a test runner.' }],
   conflicts: [],
   recommends: [],
-  appliesTo: ['vite', 'next'],
+  appliesTo: ['vite', 'next', 'react'],
   setup: [],
   maintainers: ['testing-library'],
   docs: { quickstart: 'https://testing-library.com/docs/react-testing-library/intro/' },

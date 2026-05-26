@@ -18,7 +18,7 @@ export const reactRouter: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [],
-  appliesTo: ['vite'],
+  appliesTo: ['vite', 'react'],
   setup: [],
   maintainers: ['remix-run'],
   docs: { quickstart: 'https://reactrouter.com/start/library/installation' },

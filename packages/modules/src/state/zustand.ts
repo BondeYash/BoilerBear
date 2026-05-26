@@ -21,7 +21,7 @@ export const zustand: ModuleManifest = {
     { id: 'jotai', severity: 'warning', reason: 'Both manage global state; pick one.' },
   ],
   recommends: [],
-  appliesTo: ['vite', 'next'],
+  appliesTo: ['vite', 'next', 'react'],
   setup: [],
   maintainers: ['pmndrs'],
   docs: { quickstart: 'https://docs.pmnd.rs/zustand/getting-started/introduction' },

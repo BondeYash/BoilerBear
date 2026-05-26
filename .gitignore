@@ -46,3 +46,4 @@ manifest-health.*.json
 .parcel-cache/
 .vercel
 .contentlayer/
+docs

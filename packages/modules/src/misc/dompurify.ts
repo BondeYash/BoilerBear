@@ -1,0 +1,36 @@
+import type { ModuleManifest } from '@boilerbear/core';
+
+export const dompurify: ModuleManifest = {
+  id: 'dompurify',
+  name: 'DOMPurify',
+  category: 'misc',
+  tags: ['security', 'xss', 'sanitize'],
+  description: 'DOM-only XSS sanitizer for HTML, MathML and SVG.',
+  homepage: 'https://github.com/cure53/DOMPurify',
+  license: 'MPL-2.0',
+  popularity: 9_400_000,
+  versions: { range: '^3.2.0', min: '3.2.0' },
+  languages: ['js'],
+  packages: {
+    deps: [{ name: 'dompurify', version: '^3.2.0' }],
+    devDeps: [{ name: '@types/dompurify', version: '^3.0.5' }],
+  },
+  requires: [],
+  conflicts: [],
+  recommends: [],
+  appliesTo: [
+    'react',
+    'vue',
+    'svelte',
+    'solid',
+    'preact',
+    'lit',
+    'alpine',
+    'htmx',
+    'mithril',
+    'stencil',
+  ],
+  setup: [],
+  maintainers: ['cure53'],
+  docs: { quickstart: 'https://github.com/cure53/DOMPurify#readme' },
+};

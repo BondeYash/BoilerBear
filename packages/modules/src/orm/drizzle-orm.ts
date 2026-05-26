@@ -21,7 +21,7 @@ export const drizzleOrm: ModuleManifest = {
     { id: 'typeorm', severity: 'warning', reason: 'Pick one ORM.' },
   ],
   recommends: [],
-  appliesTo: [],
+  appliesTo: ['react', 'next', 'vite'],
   setup: [],
   maintainers: ['drizzle-team'],
   docs: { quickstart: 'https://orm.drizzle.team/docs/get-started' },

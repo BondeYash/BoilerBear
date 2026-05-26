@@ -22,7 +22,7 @@ export const vitestModule: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [{ id: 'testing-library' }],
-  appliesTo: ['vite', 'next'],
+  appliesTo: ['vite', 'next', 'react'],
   setup: [
     {
       kind: 'appendScript',

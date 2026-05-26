@@ -18,7 +18,7 @@ export const clerk: ModuleManifest = {
   requires: [],
   conflicts: [{ id: 'next-auth', severity: 'warning', reason: 'Pick a single auth provider.' }],
   recommends: [],
-  appliesTo: ['next'],
+  appliesTo: ['next', 'react'],
   setup: [
     {
       kind: 'envVar',
