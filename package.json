@@ -30,11 +30,11 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.4.16",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
-    "turbo": "^2.3.3",
-    "typescript": "^5.7.2"
+    "lint-staged": "^17.0.5",
+    "turbo": "^2.9.15",
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md}": ["biome check --write --no-errors-on-unmatched"]

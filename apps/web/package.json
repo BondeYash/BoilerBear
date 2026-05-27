@@ -31,15 +31,15 @@
     "@axe-core/playwright": "^4.10.1",
     "@boilerbear/config": "workspace:*",
     "@playwright/test": "^1.49.1",
-    "@types/node": "^22.10.0",
+    "@types/node": "^25.9.1",
     "@tailwindcss/typography": "^0.5.15",
-    "@types/react": "^19.0.1",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.20",
     "axe-core": "^4.10.2",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
+    "tailwindcss": "^4.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.7.2"
+    "typescript": "^6.0.3"
   }
 }
