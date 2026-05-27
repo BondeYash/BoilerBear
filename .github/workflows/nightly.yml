@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload manifest-health artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: manifest-health-${{ matrix.pm }}
           path: ${{ github.workspace }}/manifest-health.${{ matrix.pm }}.json
