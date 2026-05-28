@@ -21,7 +21,7 @@ export const storybook: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [],
-  appliesTo: ['react', 'next', 'vite', 'solid', 'qwik', 'preact', 'marko'],
+  appliesTo: ['react', 'next', 'vite', 'solid', 'qwik', 'remix', 'solid-start', 'preact', 'marko'],
   setup: [
     {
       kind: 'appendScript',

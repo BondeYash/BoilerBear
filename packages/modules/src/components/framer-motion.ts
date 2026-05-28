@@ -18,7 +18,7 @@ export const framerMotion: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [],
-  appliesTo: ['react', 'next'],
+  appliesTo: ['react', 'next', 'remix', 'preact'],
   setup: [],
   maintainers: ['framer'],
   docs: { quickstart: 'https://www.framer.com/motion/introduction/' },

@@ -18,7 +18,7 @@ export const vercel: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [],
-  appliesTo: ['react', 'next', 'vite', 'vue', 'svelte', 'solid', 'preact'],
+  appliesTo: ['react', 'next', 'vite', 'vue', 'svelte', 'solid', 'preact', 'lit'],
   setup: [],
   maintainers: ['vercel'],
   docs: { quickstart: 'https://vercel.com/docs/getting-started-with-vercel' },

@@ -34,6 +34,7 @@ export const stripeJs: ModuleManifest = {
     'htmx',
     'mithril',
     'stencil',
+    'astro',
   ],
   setup: [
     {

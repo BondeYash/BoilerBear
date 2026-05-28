@@ -21,7 +21,7 @@ export const reactHookForm: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [{ id: 'zod', reason: 'Validate RHF forms with Zod schemas.' }],
-  appliesTo: ['vite', 'next', 'react'],
+  appliesTo: ['vite', 'next', 'react', 'preact'],
   setup: [],
   maintainers: ['react-hook-form'],
   docs: { quickstart: 'https://react-hook-form.com/get-started' },

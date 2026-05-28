@@ -18,7 +18,7 @@ export const socketIoClient: ModuleManifest = {
   requires: [],
   conflicts: [],
   recommends: [],
-  appliesTo: ['react', 'vue', 'svelte', 'solid', 'preact', 'mithril', 'stencil'],
+  appliesTo: ['react', 'vue', 'svelte', 'solid', 'preact', 'mithril', 'stencil', 'lit'],
   setup: [],
   maintainers: ['socketio'],
   docs: { quickstart: 'https://socket.io/docs/v4/client-installation/' },

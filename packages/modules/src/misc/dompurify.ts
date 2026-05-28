@@ -13,7 +13,7 @@ export const dompurify: ModuleManifest = {
   languages: ['js'],
   packages: {
     deps: [{ name: 'dompurify', version: '^3.2.0' }],
-    devDeps: [{ name: '@types/dompurify', version: '^3.0.5' }],
+    devDeps: [],
   },
   requires: [],
   conflicts: [],

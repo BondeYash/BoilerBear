@@ -18,7 +18,7 @@ export const tanstackQuery: ModuleManifest = {
   requires: [],
   conflicts: [{ id: 'swr', severity: 'warning', reason: 'Pick one server-cache library.' }],
   recommends: [],
-  appliesTo: ['vite', 'next', 'react'],
+  appliesTo: ['vite', 'next', 'react', 'preact', 'stencil'],
   setup: [],
   maintainers: ['tannerlinsley'],
   docs: { quickstart: 'https://tanstack.com/query/latest/docs/framework/react/quick-start' },

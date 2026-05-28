@@ -33,6 +33,7 @@ export const vercelAiSdk: ModuleManifest = {
     'astro',
     'remix',
     'qwik',
+    'preact',
   ],
   setup: [
     {
